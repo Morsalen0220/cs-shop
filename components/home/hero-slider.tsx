@@ -48,15 +48,15 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ products, settings }) => {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[34px] border border-white/60 bg-white/75 p-4 shadow-[0_24px_80px_rgba(17,17,17,0.12)] sm:p-6">
+    <div className="relative w-full min-w-0 overflow-hidden rounded-[34px] border border-white/60 bg-white/75 p-4 shadow-[0_24px_80px_rgba(17,17,17,0.12)] sm:p-6">
       <div className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,_#121212_0%,_#1d1d1d_42%,_#fff6ee_42%,_#fff2e7_100%)] p-6 sm:p-7">
-        <div className="absolute inset-y-0 left-[42%] hidden w-px bg-white/10 lg:block" />
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-          <div className="max-w-xl">
+        <div className="absolute inset-y-0 left-1/2 hidden w-px bg-white/10 xl:block" />
+        <div className="grid gap-6 xl:grid-cols-[1fr_0.88fr] xl:items-end">
+          <div className="max-w-none xl:max-w-xl">
             <p className="text-[11px] uppercase tracking-[0.34em] text-white/55">
               {settings.eyebrow}
             </p>
-            <p className="mt-4 text-4xl font-semibold leading-[0.93] text-white sm:text-5xl">
+            <p className="mt-4 max-w-[11ch] text-4xl font-semibold leading-[0.93] text-white sm:text-5xl">
               {settings.title}
             </p>
             <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
@@ -69,11 +69,11 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ products, settings }) => {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-black/10 bg-white/72 p-5 backdrop-blur-sm sm:p-6">
+          <div className="rounded-[28px] border border-black/10 bg-white/72 p-5 backdrop-blur-sm sm:p-6 xl:justify-self-end xl:w-full xl:max-w-[340px]">
             <p className="text-[11px] uppercase tracking-[0.34em] text-gray-500">
               {settings.spotlightLabel}
             </p>
-            <p className="mt-4 max-w-sm text-3xl font-semibold leading-[1.02] text-[#111111] sm:text-[2.35rem]">
+            <p className="mt-4 max-w-sm text-3xl font-semibold leading-[1.02] text-[#111111] sm:text-[2.15rem]">
               {activeSlide.category.name} {settings.spotlightText}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -99,7 +99,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ products, settings }) => {
       </div>
 
       <div className="relative mt-4 overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,_#ffffff_0%,_#f7e7dd_46%,_#edf3ff_100%)]">
-        <div className="grid gap-6 px-5 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:pb-24">
+        <div className="grid gap-6 px-5 pb-20 pt-16 sm:px-6 xl:grid-cols-[0.95fr_1.05fr] xl:items-center xl:px-8 xl:pb-24">
           <div className="space-y-5">
             <div className="inline-flex w-fit rounded-full border border-black/10 bg-white/90 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-gray-500">
               {activeSlide.category.name}

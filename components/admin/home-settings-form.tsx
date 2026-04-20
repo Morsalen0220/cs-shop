@@ -6,8 +6,13 @@ import {
   readHomeSettings,
   saveHomeSettings,
 } from "@/lib/home-settings";
-import { HomeSettings, Product, ProductSectionSettings } from "@/types";
-import { MonitorSmartphone, Sparkles } from "lucide-react";
+import {
+  HomeSettings,
+  Product,
+  ProductSectionSettings,
+  PromoCodeSettings,
+} from "@/types";
+import { MonitorSmartphone, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -73,6 +78,45 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
           itemIndex === index ? { ...item, [field]: value } : item
         ),
       },
+    }));
+  };
+
+  const addPromoCode = () => {
+    setSettings((current) => ({
+      ...current,
+      promoCodes: [
+        ...current.promoCodes,
+        {
+          id: `promo-${Date.now()}`,
+          code: "",
+          label: "",
+          value: 10,
+          type: "percentage",
+          enabled: true,
+        },
+      ],
+    }));
+  };
+
+  const updatePromoCode = <
+    K extends keyof PromoCodeSettings
+  >(
+    index: number,
+    field: K,
+    value: PromoCodeSettings[K]
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      promoCodes: current.promoCodes.map((promo, promoIndex) =>
+        promoIndex === index ? { ...promo, [field]: value } : promo
+      ),
+    }));
+  };
+
+  const removePromoCode = (index: number) => {
+    setSettings((current) => ({
+      ...current,
+      promoCodes: current.promoCodes.filter((_, promoIndex) => promoIndex !== index),
     }));
   };
 
@@ -311,6 +355,115 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
           </div>
         </section>
       </div>
+
+      <section className={sectionCardClass}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+              Cart Promo Codes
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+              Customer coupon settings
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-500">
+              Add promo codes customers can enter on the cart page. Choose flat or percentage discounts and turn them on or off anytime.
+            </p>
+          </div>
+          <Button className="bg-[#111111]" onClick={addPromoCode}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add promo code
+          </Button>
+        </div>
+
+        <div className="grid gap-4">
+          {settings.promoCodes.map((promo, index) => (
+            <div
+              key={promo.id}
+              className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5"
+            >
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="grid flex-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                  <div>
+                    <label className="text-sm font-medium">Promo code</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updatePromoCode(index, "code", event.target.value.toUpperCase())
+                      }
+                      value={promo.code}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Customer label</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updatePromoCode(index, "label", event.target.value)
+                      }
+                      value={promo.label}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Discount type</label>
+                    <select
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updatePromoCode(
+                          index,
+                          "type",
+                          event.target.value as PromoCodeSettings["type"]
+                        )
+                      }
+                      value={promo.type}
+                    >
+                      <option value="percentage">Percentage</option>
+                      <option value="fixed">Fixed amount</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">
+                      {promo.type === "percentage" ? "Discount %" : "Discount amount"}
+                    </label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      min="0"
+                      onChange={(event) =>
+                        updatePromoCode(
+                          index,
+                          "value",
+                          Number(event.target.value || 0)
+                        )
+                      }
+                      type="number"
+                      value={promo.value}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <input
+                      checked={promo.enabled}
+                      onChange={(event) =>
+                        updatePromoCode(index, "enabled", event.target.checked)
+                      }
+                      type="checkbox"
+                    />
+                    Active
+                  </label>
+                  <Button
+                    className="border border-black/10 bg-white text-[#111111]"
+                    onClick={() => removePromoCode(index)}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className={sectionCardClass}>
         <div>

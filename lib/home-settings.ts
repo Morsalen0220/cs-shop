@@ -12,6 +12,24 @@ export const defaultHomeSettings: HomeSettings = {
     enabled: true,
     text: "New season live",
   },
+  promoCodes: [
+    {
+      id: "welcome-10",
+      code: "WELCOME10",
+      label: "10% off your order",
+      value: 10,
+      type: "percentage",
+      enabled: true,
+    },
+    {
+      id: "run500",
+      code: "RUN500",
+      label: "Flat 500 off selected orders",
+      value: 500,
+      type: "fixed",
+      enabled: true,
+    },
+  ],
   promoSection: {
     enabled: true,
     badgeText: "Sprint Promo",
@@ -100,6 +118,15 @@ export const mergeHomeSettings = (
     ...defaultHomeSettings.navbarPromo,
     ...(settings?.navbarPromo ?? {}),
   },
+  promoCodes: Array.isArray(settings?.promoCodes)
+    ? settings!.promoCodes.map((promo, index) => ({
+          ...defaultHomeSettings.promoCodes[index % defaultHomeSettings.promoCodes.length],
+          ...promo,
+          id:
+            promo.id ||
+            `${String(promo.code || "promo").toLowerCase().replace(/\s+/g, "-")}-${index}`,
+        }))
+    : defaultHomeSettings.promoCodes,
   promoSection: {
     ...defaultHomeSettings.promoSection,
     ...(settings?.promoSection ?? {}),

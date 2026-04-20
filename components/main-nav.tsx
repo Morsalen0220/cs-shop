@@ -57,6 +57,11 @@ const MainNav: React.FC<MainNavProps> = ({ data }) => {
       label: "Contact",
       active: pathName === "/contact",
     },
+    {
+      href: "/my-account",
+      label: "My Account",
+      active: pathName === "/my-account",
+    },
   ];
 
   return (

@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  readHomeSettings,
+  saveHomeSettings,
+} from "@/lib/home-settings";
 import type { Category, Color, Size } from "@/types";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
@@ -20,6 +24,52 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
+
+  const createProductId = (value: string) =>
+    value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+  const addProductToSection = (productIds: string[], productId: string) => {
+    if (productIds.includes(productId)) {
+      return productIds;
+    }
+
+    return [productId, ...productIds];
+  };
+
+  const syncHomeSections = (productId: string, formData: FormData) => {
+    const settings = readHomeSettings();
+
+    const nextSettings = {
+      ...settings,
+      bestSellerSection: {
+        ...settings.bestSellerSection,
+        productIds:
+          formData.get("showInHighlights") === "on"
+            ? addProductToSection(settings.bestSellerSection.productIds, productId)
+            : settings.bestSellerSection.productIds,
+      },
+      newArrivalsSection: {
+        ...settings.newArrivalsSection,
+        productIds:
+          formData.get("showInNewArrivals") === "on"
+            ? addProductToSection(settings.newArrivalsSection.productIds, productId)
+            : settings.newArrivalsSection.productIds,
+      },
+      flashSaleSection: {
+        ...settings.flashSaleSection,
+        productIds:
+          formData.get("showInLimitedDeals") === "on"
+            ? addProductToSection(settings.flashSaleSection.productIds, productId)
+            : settings.flashSaleSection.productIds,
+      },
+    };
+
+    saveHomeSettings(nextSettings);
+  };
 
   const uploadFile = async (file: File) => {
     const uploadData = new FormData();
@@ -63,6 +113,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
+    const productId = createProductId(String(formData.get("name") || ""));
     const payload = {
       name: formData.get("name"),
       description: formData.get("description"),
@@ -87,6 +138,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
       const data = await response.json().catch(() => null);
       toast.error(data?.error || "Product was not saved");
       return;
+    }
+
+    if (productId) {
+      syncHomeSections(productId, formData);
     }
 
     toast.success("Product created");
@@ -229,6 +284,55 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </span>
           </span>
         </label>
+      </div>
+      <div className="rounded-2xl border border-black/10 bg-[#faf9f6] p-5">
+        <p className="text-sm font-semibold text-[#111111]">
+          Homepage auto-placement
+        </p>
+        <p className="mt-1 text-sm text-gray-500">
+          Tick these and the product will be added automatically to the selected homepage sections after save.
+        </p>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <label className="flex gap-4 rounded-2xl border bg-white p-4">
+            <input
+              name="showInHighlights"
+              type="checkbox"
+              className="mt-1 h-4 w-4"
+            />
+            <span>
+              <span className="block text-sm font-medium">Highlight items</span>
+              <span className="text-sm text-gray-500">
+                Add to the homepage highlight section.
+              </span>
+            </span>
+          </label>
+          <label className="flex gap-4 rounded-2xl border bg-white p-4">
+            <input
+              name="showInNewArrivals"
+              type="checkbox"
+              className="mt-1 h-4 w-4"
+            />
+            <span>
+              <span className="block text-sm font-medium">Latest products</span>
+              <span className="text-sm text-gray-500">
+                Add to the new arrivals collection.
+              </span>
+            </span>
+          </label>
+          <label className="flex gap-4 rounded-2xl border bg-white p-4">
+            <input
+              name="showInLimitedDeals"
+              type="checkbox"
+              className="mt-1 h-4 w-4"
+            />
+            <span>
+              <span className="block text-sm font-medium">Limited time deals</span>
+              <span className="text-sm text-gray-500">
+                Add to the flash sale style deals section.
+              </span>
+            </span>
+          </label>
+        </div>
       </div>
       <div className="flex justify-end gap-3">
         <button

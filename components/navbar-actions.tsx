@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/button";
 import useCart from "@/hooks/use-cart";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,6 +22,14 @@ const NavbarActions = () => {
 
   return (
     <div className="flex items-center gap-x-3">
+      <button
+        aria-label="My account"
+        className="hidden h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white md:inline-flex"
+        onClick={() => router.push("/my-account")}
+        type="button"
+      >
+        <User size={18} />
+      </button>
       <button
         aria-label="Search products"
         className="hidden h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white md:inline-flex"

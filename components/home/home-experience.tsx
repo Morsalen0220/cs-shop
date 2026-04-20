@@ -83,7 +83,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
   return (
     <div className="pb-16">
       <section className="overflow-hidden rounded-[36px] border border-black/10 bg-[radial-gradient(circle_at_top_left,_rgba(255,109,56,0.18),_transparent_33%),linear-gradient(135deg,_#fff4ec_0%,_#ffffff_45%,_#eef2ff_100%)] px-4 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        <div className="grid gap-10 xl:grid-cols-[1fr_1fr] xl:items-center">
           <div className="space-y-8">
             {settings.promoSection.enabled ? (
               <div className="space-y-5">
@@ -161,7 +161,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
             ) : null}
           </div>
 
-          <div className="relative">
+          <div className="relative min-w-0">
             <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,_rgba(255,90,31,0.18),_transparent_60%)] blur-3xl" />
             <HeroSlider products={products} settings={settings.heroSlider} />
           </div>

@@ -56,6 +56,15 @@ export interface NavbarPromoSettings {
   text: string;
 }
 
+export interface PromoCodeSettings {
+  id: string;
+  code: string;
+  label: string;
+  value: number;
+  type: "percentage" | "fixed";
+  enabled: boolean;
+}
+
 export interface PromoSectionSettings {
   enabled: boolean;
   badgeText: string;
@@ -103,6 +112,7 @@ export interface WhyChooseUsSettings {
 export interface HomeSettings {
   announcementBar: AnnouncementBarSettings;
   navbarPromo: NavbarPromoSettings;
+  promoCodes: PromoCodeSettings[];
   promoSection: PromoSectionSettings;
   heroSlider: HeroSliderSettings;
   newsletterSection: NewsletterSectionSettings;
