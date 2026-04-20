@@ -56,6 +56,19 @@ export interface NavbarPromoSettings {
   text: string;
 }
 
+export interface HeaderMenuItem {
+  id: string;
+  label: string;
+  href: string;
+  type: "link" | "categories";
+}
+
+export interface HeaderSettings {
+  brandLabel: string;
+  tagline: string;
+  menuItems: HeaderMenuItem[];
+}
+
 export interface PromoCodeSettings {
   id: string;
   code: string;
@@ -110,6 +123,7 @@ export interface WhyChooseUsSettings {
 }
 
 export interface HomeSettings {
+  header: HeaderSettings;
   announcementBar: AnnouncementBarSettings;
   navbarPromo: NavbarPromoSettings;
   promoCodes: PromoCodeSettings[];

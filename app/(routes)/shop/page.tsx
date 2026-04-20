@@ -145,8 +145,8 @@ const ShopPage: React.FC<ShopPageProps> = async ({ searchParams }) => {
             </div>
           </section>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
-            <aside className="space-y-5">
+          <div className="mt-8 grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:overflow-hidden lg:[height:calc(100vh-11rem)]">
+            <aside className="space-y-5 lg:sticky lg:top-0 lg:max-h-full lg:overflow-y-auto lg:pr-2">
               <div className="rounded-[30px] border border-black/10 bg-white p-5 shadow-[0_18px_60px_rgba(17,17,17,0.05)]">
                 <div className="flex items-center gap-2">
                   <div className="rounded-2xl bg-[#fff2e8] p-3 text-[#ff5a1f]">
@@ -213,7 +213,7 @@ const ShopPage: React.FC<ShopPageProps> = async ({ searchParams }) => {
               </div>
             </aside>
 
-            <section className="space-y-5">
+            <section className="space-y-5 lg:h-full lg:overflow-y-auto lg:pr-2">
               <div className="rounded-[30px] border border-black/10 bg-white p-4 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-5">
                 <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                   <form className="flex-1" action="/shop" method="get">

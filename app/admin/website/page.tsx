@@ -39,6 +39,7 @@ const WebsitePage = async () => {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {[
+              "Header brand and menu",
               "Announcement bar",
               "Navbar promo pill",
               "Hero offer and countdown",

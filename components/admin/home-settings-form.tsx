@@ -7,6 +7,7 @@ import {
   saveHomeSettings,
 } from "@/lib/home-settings";
 import {
+  HeaderMenuItem,
   HomeSettings,
   Product,
   ProductSectionSettings,
@@ -76,6 +77,69 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
         ...current.whyChooseUsSection,
         items: current.whyChooseUsSection.items.map((item, itemIndex) =>
           itemIndex === index ? { ...item, [field]: value } : item
+        ),
+      },
+    }));
+  };
+
+  const updateHeaderField = <
+    F extends keyof HomeSettings["header"]
+  >(
+    field: F,
+    value: HomeSettings["header"][F]
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      header: {
+        ...current.header,
+        [field]: value,
+      },
+    }));
+  };
+
+  const addHeaderMenuItem = () => {
+    setSettings((current) => ({
+      ...current,
+      header: {
+        ...current.header,
+        menuItems: [
+          ...current.header.menuItems,
+          {
+            id: `nav-item-${Date.now()}`,
+            label: "New menu item",
+            href: "/",
+            type: "link",
+          },
+        ],
+      },
+    }));
+  };
+
+  const updateHeaderMenuItem = <
+    F extends keyof HeaderMenuItem
+  >(
+    index: number,
+    field: F,
+    value: HeaderMenuItem[F]
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      header: {
+        ...current.header,
+        menuItems: current.header.menuItems.map((item, itemIndex) =>
+          itemIndex === index ? { ...item, [field]: value } : item
+        ),
+      },
+    }));
+  };
+
+  const removeHeaderMenuItem = (index: number) => {
+    setSettings((current) => ({
+      ...current,
+      header: {
+        ...current.header,
+        menuItems: current.header.menuItems.filter(
+          (_, itemIndex) => itemIndex !== index
         ),
       },
     }));
@@ -168,6 +232,115 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
             <p className="mt-3 text-sm leading-7 text-white/70">
               Change marketing copy, product highlights, slider behavior, and trust-building sections without touching storefront code.
             </p>
+          </div>
+        </div>
+
+        <div className={sectionCardClass}>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+              Header
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+              Brand text and navigation menu
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-gray-500">
+              Update the logo name, tagline, and the navbar menu items customers see across the storefront.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="text-sm font-medium">Logo name</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateHeaderField("brandLabel", event.target.value)
+                }
+                value={settings.header.brandLabel}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Tagline</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateHeaderField("tagline", event.target.value)
+                }
+                value={settings.header.tagline}
+              />
+            </div>
+          </div>
+          <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-950">Menu items</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Add new links, edit labels and URLs, or keep a categories dropdown in the header.
+                </p>
+              </div>
+              <Button className="bg-[#111111]" onClick={addHeaderMenuItem}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add menu item
+              </Button>
+            </div>
+
+            <div className="mt-5 grid gap-4">
+              {settings.header.menuItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="rounded-[22px] border border-black/10 bg-white p-4"
+                >
+                  <div className="grid gap-4 lg:grid-cols-[1fr_180px_1fr_auto] lg:items-end">
+                    <div>
+                      <label className="text-sm font-medium">Menu label</label>
+                      <input
+                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                        onChange={(event) =>
+                          updateHeaderMenuItem(index, "label", event.target.value)
+                        }
+                        value={item.label}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Item type</label>
+                      <select
+                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                        onChange={(event) =>
+                          updateHeaderMenuItem(
+                            index,
+                            "type",
+                            event.target.value as HeaderMenuItem["type"]
+                          )
+                        }
+                        value={item.type}
+                      >
+                        <option value="link">Link</option>
+                        <option value="categories">Categories dropdown</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">
+                        {item.type === "categories" ? "Fallback link" : "Link URL"}
+                      </label>
+                      <input
+                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                        onChange={(event) =>
+                          updateHeaderMenuItem(index, "href", event.target.value)
+                        }
+                        placeholder={item.type === "categories" ? "/shop" : "/about"}
+                        value={item.href}
+                      />
+                    </div>
+                    <Button
+                      className="border border-black/10 bg-white text-[#111111]"
+                      onClick={() => removeHeaderMenuItem(index)}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

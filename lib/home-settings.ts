@@ -3,6 +3,29 @@ import { HomeSettings } from "@/types";
 export const HOME_SETTINGS_STORAGE_KEY = "nike-shop-home-settings";
 
 export const defaultHomeSettings: HomeSettings = {
+  header: {
+    brandLabel: "Nike Shop",
+    tagline: "Move with intention",
+    menuItems: [
+      { id: "nav-home", label: "Home", href: "/", type: "link" },
+      { id: "nav-shop", label: "Shop", href: "/shop", type: "link" },
+      {
+        id: "nav-arrivals",
+        label: "New Arrivals",
+        href: "/#new-arrivals",
+        type: "link",
+      },
+      { id: "nav-sale", label: "Sale", href: "/#flash-sale", type: "link" },
+      { id: "nav-about", label: "About", href: "/about", type: "link" },
+      { id: "nav-contact", label: "Contact", href: "/contact", type: "link" },
+      {
+        id: "nav-categories",
+        label: "Categories",
+        href: "/shop",
+        type: "categories",
+      },
+    ],
+  },
   announcementBar: {
     enabled: true,
     primaryText: "Free shipping on orders over $150",
@@ -107,9 +130,31 @@ const mergeFeatureItems = (items: HomeSettings["whyChooseUsSection"]["items"]) =
     ...(items?.[index] ?? {}),
   }));
 
+const mergeHeaderMenuItems = (
+  items?: Partial<HomeSettings["header"]["menuItems"][number]>[] | null
+) =>
+  Array.isArray(items) && items.length > 0
+    ? items.map((item, index) => ({
+        ...defaultHomeSettings.header.menuItems[
+          index % defaultHomeSettings.header.menuItems.length
+        ],
+        ...item,
+        id:
+          item.id ||
+          `${String(item.label || "menu-item")
+            .toLowerCase()
+            .replace(/\s+/g, "-")}-${index}`,
+      }))
+    : defaultHomeSettings.header.menuItems;
+
 export const mergeHomeSettings = (
   settings?: Partial<HomeSettings> | null
 ): HomeSettings => ({
+  header: {
+    ...defaultHomeSettings.header,
+    ...(settings?.header ?? {}),
+    menuItems: mergeHeaderMenuItems(settings?.header?.menuItems),
+  },
   announcementBar: {
     ...defaultHomeSettings.announcementBar,
     ...(settings?.announcementBar ?? {}),
