@@ -16,10 +16,12 @@ type BillboardRow = {
   image_url: string;
 };
 
+type OneOrMany<T> = T | T[] | null;
+
 type CategoryRow = {
   id: string;
   name: string;
-  billboards: BillboardRow | null;
+  billboards: OneOrMany<BillboardRow>;
 };
 
 type SizeRow = {
@@ -46,10 +48,18 @@ type ProductRow = {
   is_archived?: boolean | null;
   is_featured?: boolean | null;
   price: string;
-  categories: CategoryRow | null;
-  sizes: SizeRow | null;
-  colors: ColorRow | null;
+  categories: OneOrMany<CategoryRow>;
+  sizes: OneOrMany<SizeRow>;
+  colors: OneOrMany<ColorRow>;
   product_images: ProductImageRow[] | null;
+};
+
+const firstRelation = <T>(value: OneOrMany<T>): T | null => {
+  if (Array.isArray(value)) {
+    return value[0] ?? null;
+  }
+
+  return value ?? null;
 };
 
 export const mapBillboard = (row: BillboardRow): Billboard => ({
@@ -61,8 +71,8 @@ export const mapBillboard = (row: BillboardRow): Billboard => ({
 export const mapCategory = (row: CategoryRow): Category => ({
   id: row.id,
   name: row.name,
-  billboard: row.billboards
-    ? mapBillboard(row.billboards)
+  billboard: firstRelation(row.billboards)
+    ? mapBillboard(firstRelation(row.billboards) as BillboardRow)
     : { id: "", label: "", imageUrl: "" },
 });
 
@@ -85,14 +95,18 @@ export const mapProduct = (row: ProductRow): Product => ({
   isArchived: Boolean(row.is_archived),
   isFeatured: Boolean(row.is_featured),
   price: row.price,
-  category: row.categories
-    ? mapCategory(row.categories)
+  category: firstRelation(row.categories)
+    ? mapCategory(firstRelation(row.categories) as CategoryRow)
     : {
         id: "",
         name: "",
         billboard: { id: "", label: "", imageUrl: "" },
       },
-  size: row.sizes ? mapSize(row.sizes) : { id: "", name: "", value: "" },
-  color: row.colors ? mapColor(row.colors) : { id: "", name: "", value: "" },
+  size: firstRelation(row.sizes)
+    ? mapSize(firstRelation(row.sizes) as SizeRow)
+    : { id: "", name: "", value: "" },
+  color: firstRelation(row.colors)
+    ? mapColor(firstRelation(row.colors) as ColorRow)
+    : { id: "", name: "", value: "" },
   images: row.product_images ?? [],
 });

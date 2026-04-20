@@ -13,12 +13,14 @@ import { Product } from "@/types";
 
 interface ProductCard {
   data: Product;
+  badge?: string;
 }
 
-const ProductCard: React.FC<ProductCard> = ({ data }) => {
+const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
   const previewModal = usePreviewModal();
   const cart = useCart();
   const router = useRouter();
+  const imageUrl = data.images?.[0]?.url || "/images/image-1.jpg";
 
   const handleClick = () => {
     router.push(`/product/${data?.id}`);
@@ -43,9 +45,14 @@ const ProductCard: React.FC<ProductCard> = ({ data }) => {
     >
       {/* Image & actions */}
       <div className="aspect-square rounded-xl bg-gray-100 relative">
+        {badge ? (
+          <div className="absolute left-3 top-3 z-10 rounded-full bg-[#111111] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+            {badge}
+          </div>
+        ) : null}
         <Image
-          src={data.images?.[0]?.url}
-          alt=""
+          src={imageUrl}
+          alt={data.name}
           fill
           className="aspect-square object-cover rounded-md"
         />

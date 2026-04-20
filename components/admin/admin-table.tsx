@@ -1,9 +1,11 @@
 interface AdminTableProps {
   columns: string[];
   rows: Array<Array<React.ReactNode>>;
+  onEdit?: (rowIndex: number) => void;
+  onDelete?: (rowIndex: number) => void;
 }
 
-const AdminTable: React.FC<AdminTableProps> = ({ columns, rows }) => {
+const AdminTable: React.FC<AdminTableProps> = ({ columns, rows, onEdit, onDelete }) => {
   return (
     <div className="mt-8 overflow-hidden rounded-md border bg-white">
       <table className="w-full min-w-[720px] text-left text-sm">
@@ -14,7 +16,7 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, rows }) => {
                 {column}
               </th>
             ))}
-            <th className="px-4 py-3" />
+            <th className="px-4 py-3 w-32">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -25,10 +27,23 @@ const AdminTable: React.FC<AdminTableProps> = ({ columns, rows }) => {
                   {cell}
                 </td>
               ))}
-              <td className="px-4 py-4 text-right">
-                <button className="rounded-md border px-3 py-1 text-lg leading-none">
-                  »
-                </button>
+              <td className="px-4 py-4 text-right space-x-2">
+                {onEdit && (
+                  <button
+                    onClick={() => onEdit(rowIndex)}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
+                    Edit
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    onClick={() => onDelete(rowIndex)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Delete
+                  </button>
+                )}
               </td>
             </tr>
           ))}

@@ -21,7 +21,10 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({ sizes, colors }) => {
 
   return (
     <>
-      <Button onClick={onOpen} className="flex items-center gap-x-2 lg:hidden">
+      <Button
+        onClick={onOpen}
+        className="flex items-center gap-x-2 bg-white text-[#111111] border border-black/10 lg:hidden"
+      >
         Filters
         <Plus size={20} />
       </Button>
@@ -41,6 +44,12 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({ sizes, colors }) => {
             </div>
 
             <div className="p-4">
+              <div className="mb-5">
+                <p className="text-lg font-semibold text-[#111111]">Filters</p>
+                <p className="text-sm text-gray-500">
+                  Narrow down by size and color
+                </p>
+              </div>
               <Filter valueKey="sizeId" name="Sizes" data={sizes} />
               <Filter valueKey="colorId" name="Colors" data={colors} />
             </div>

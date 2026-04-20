@@ -1,5 +1,6 @@
 "use client";
 
+import AnnouncementBar from "@/components/announcement-bar";
 import { usePathname } from "next/navigation";
 
 interface SiteChromeProps {
@@ -18,6 +19,7 @@ const SiteChrome: React.FC<SiteChromeProps> = ({ children, footer, navbar }) => 
 
   return (
     <>
+      <AnnouncementBar />
       {navbar}
       {children}
       {footer}

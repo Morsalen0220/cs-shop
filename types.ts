@@ -20,6 +20,7 @@ export interface Size {
   name: string;
   value: string;
 }
+
 export interface Color {
   id: string;
   name: string;
@@ -29,7 +30,7 @@ export interface Color {
 export interface Product {
   id: string;
   category: Category;
-  description: string,
+  description: string;
   isArchived?: boolean;
   isFeatured?: boolean;
   name: string;
@@ -37,4 +38,76 @@ export interface Product {
   size: Size;
   color: Color;
   images: Image[];
+}
+
+export interface HomeFeatureItem {
+  title: string;
+  description: string;
+}
+
+export interface AnnouncementBarSettings {
+  enabled: boolean;
+  primaryText: string;
+  secondaryText: string;
+}
+
+export interface NavbarPromoSettings {
+  enabled: boolean;
+  text: string;
+}
+
+export interface PromoSectionSettings {
+  enabled: boolean;
+  badgeText: string;
+  title: string;
+  description: string;
+  discountText: string;
+  ctaLabel: string;
+  countdownEnabled: boolean;
+  countdownTarget: string;
+}
+
+export interface HeroSliderSettings {
+  enabled: boolean;
+  eyebrow: string;
+  title: string;
+  spotlightLabel: string;
+  spotlightText: string;
+  ctaLabel: string;
+  autoplay: boolean;
+}
+
+export interface NewsletterSectionSettings {
+  enabled: boolean;
+  title: string;
+  description: string;
+  placeholder: string;
+  buttonLabel: string;
+}
+
+export interface ProductSectionSettings {
+  enabled: boolean;
+  title: string;
+  description: string;
+  productIds: string[];
+  badgeText: string;
+}
+
+export interface WhyChooseUsSettings {
+  enabled: boolean;
+  title: string;
+  description: string;
+  items: HomeFeatureItem[];
+}
+
+export interface HomeSettings {
+  announcementBar: AnnouncementBarSettings;
+  navbarPromo: NavbarPromoSettings;
+  promoSection: PromoSectionSettings;
+  heroSlider: HeroSliderSettings;
+  newsletterSection: NewsletterSectionSettings;
+  bestSellerSection: ProductSectionSettings;
+  newArrivalsSection: ProductSectionSettings;
+  flashSaleSection: ProductSectionSettings;
+  whyChooseUsSection: WhyChooseUsSettings;
 }

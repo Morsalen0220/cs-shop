@@ -2,24 +2,24 @@ import Link from "next/link";
 
 const Links = [
   {
-    name: "Guides",
-    href: "",
+    name: "About",
+    href: "/about",
   },
   {
-    name: "Terms of Sale",
-    href: "",
+    name: "Contact",
+    href: "/contact",
   },
   {
-    name: "Terms of Use",
-    href: "",
+    name: "Shop",
+    href: "/shop",
   },
   {
-    name: "Nike Privacy Policy",
-    href: "",
+    name: "New Arrivals",
+    href: "/#new-arrivals",
   },
   {
-    name: "Your Privacy Choices",
-    href: "",
+    name: "Sale",
+    href: "/#flash-sale",
   },
 ];
 
