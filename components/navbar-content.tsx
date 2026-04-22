@@ -7,6 +7,7 @@ import { defaultHomeSettings, readHomeSettings } from "@/lib/home-settings";
 import { Category, HomeSettings } from "@/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface NavbarContentProps {
   categories: Category[];
@@ -14,6 +15,9 @@ interface NavbarContentProps {
 
 const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
   const [settings, setSettings] = useState<HomeSettings>(defaultHomeSettings);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isShopPage = pathname.startsWith("/shop");
 
   useEffect(() => {
     const syncSettings = () => setSettings(readHomeSettings());
@@ -32,18 +36,60 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
     (item) => item.type === "link"
   );
 
+  const prefetchRoute = (href: string) => {
+    const route = href.split("#")[0];
+
+    if (route && route.startsWith("/")) {
+      router.prefetch(route);
+    }
+  };
+
+  useEffect(() => {
+    const routes = [
+      "/",
+      ...settings.header.menuItems
+        .filter((item) => item.type === "link")
+        .map((item) => item.href.split("#")[0]),
+      ...categories.map((category) => `/category/${category.id}`),
+    ];
+
+    Array.from(new Set(routes))
+      .filter((route) => route.startsWith("/") && route !== pathname)
+      .forEach((route) => router.prefetch(route));
+  }, [categories, pathname, router, settings.header.menuItems]);
+
   return (
-    <div className="relative px-3 py-3 sm:px-6 lg:px-8">
-      <div className="flex min-h-[72px] items-center gap-3">
+    <div
+      className={`relative px-3 sm:px-6 lg:px-8 ${
+        isShopPage ? "py-2" : "py-3"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-3 ${
+          isShopPage ? "min-h-[60px]" : "min-h-[72px]"
+        }`}
+      >
         <Link
           aria-label="Nike home page"
           href="/"
+          prefetch
           className="group flex shrink-0 items-center gap-3"
+          onMouseEnter={() => prefetchRoute("/")}
         >
-          <div className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition group-hover:scale-105 md:h-[56px] md:w-[56px]">
+          <div
+            className={`flex items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition group-hover:scale-105 ${
+              isShopPage
+                ? "h-[40px] w-[40px] md:h-[48px] md:w-[48px]"
+                : "h-[44px] w-[44px] md:h-[56px] md:w-[56px]"
+            }`}
+          >
             <svg
               aria-hidden="true"
-              className="h-[24px] w-[24px] transition-transform group-hover:scale-110 md:h-[30px] md:w-[30px]"
+              className={`transition-transform group-hover:scale-110 ${
+                isShopPage
+                  ? "h-[22px] w-[22px] md:h-[26px] md:w-[26px]"
+                  : "h-[24px] w-[24px] md:h-[30px] md:w-[30px]"
+              }`}
               fill="none"
               focusable="false"
               height="24px"
@@ -63,7 +109,11 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
               {settings.header.brandLabel}
             </p>
-            <p className="text-base font-semibold leading-tight text-[#111111] sm:text-lg">
+            <p
+              className={`font-semibold leading-tight text-[#111111] ${
+                isShopPage ? "text-sm sm:text-base" : "text-base sm:text-lg"
+              }`}
+            >
               {settings.header.tagline}
             </p>
           </div>
@@ -75,21 +125,23 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
         </div>
       </div>
 
-      <div className="mt-3 hidden lg:flex">
+      <div className={`${isShopPage ? "mt-2" : "mt-3"} hidden lg:flex`}>
         <MainNav
-          className="w-full justify-center px-3 py-3"
+          className={`w-full justify-center ${isShopPage ? "px-3 py-2" : "px-3 py-3"}`}
           data={categories}
           menuItems={settings.header.menuItems}
         />
       </div>
 
-      <div className="mt-3 space-y-2 lg:hidden">
+      <div className={`${isShopPage ? "mt-2" : "mt-3"} space-y-2 lg:hidden`}>
         <div className="flex items-center gap-2 overflow-auto whitespace-nowrap">
           {mobilePrimaryLinks.map((item) => (
             <Link
               key={item.id}
               href={item.href}
+              prefetch
               className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[#111111]"
+              onMouseEnter={() => prefetchRoute(item.href)}
             >
               {item.label}
             </Link>
@@ -100,7 +152,9 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
             <Link
               key={category.id}
               href={`/category/${category.id}`}
+              prefetch
               className="rounded-full bg-[#f6f1eb] px-4 py-2 text-sm font-medium text-gray-700"
+              onMouseEnter={() => prefetchRoute(`/category/${category.id}`)}
             >
               {category.name}
             </Link>

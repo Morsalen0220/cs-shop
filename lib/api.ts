@@ -20,7 +20,9 @@ export const fetchJson = async <T>(path: string, fallback: T): Promise<T> => {
 
   try {
     const res = await fetch(url, {
-      cache: "no-store",
+      next: {
+        revalidate: 30,
+      },
     });
 
     if (!res.ok) {

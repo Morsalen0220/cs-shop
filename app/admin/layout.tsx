@@ -2,14 +2,14 @@ import AdminNav from "@/components/admin/admin-nav";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#f6f6f3] text-gray-950 xl:flex">
+    <div className="min-h-screen bg-[#f6f6f3] text-gray-950">
       <AdminNav />
-      <main className="min-w-0 flex-1">
+      <main className="min-w-0 xl:ml-[292px]">
         <div className="border-b border-black/5 bg-white/70 px-6 py-5 backdrop-blur xl:px-10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-400">
-                Nike Shop Admin
+                Nikeshop Admin
               </p>
               <p className="mt-1 text-lg font-semibold text-[#111111]">
                 Premium storefront management

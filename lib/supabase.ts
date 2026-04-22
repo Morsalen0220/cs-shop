@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Billboard, Category, Color, Product, Size } from "@/types";
+import type { Billboard, BlogPost, Category, Color, Product, Size } from "@/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -39,6 +39,19 @@ type ColorRow = {
 type ProductImageRow = {
   id: string;
   url: string;
+};
+
+type BlogPostRow = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  cover_image_url: string;
+  read_time: string;
+  is_published?: boolean | null;
+  created_at: string;
 };
 
 type ProductRow = {
@@ -109,4 +122,17 @@ export const mapProduct = (row: ProductRow): Product => ({
     ? mapColor(firstRelation(row.colors) as ColorRow)
     : { id: "", name: "", value: "" },
   images: row.product_images ?? [],
+});
+
+export const mapBlogPost = (row: BlogPostRow): BlogPost => ({
+  id: row.id,
+  slug: row.slug,
+  title: row.title,
+  excerpt: row.excerpt,
+  content: row.content,
+  category: row.category,
+  coverImageUrl: row.cover_image_url,
+  readTime: row.read_time,
+  isPublished: Boolean(row.is_published),
+  createdAt: row.created_at,
 });

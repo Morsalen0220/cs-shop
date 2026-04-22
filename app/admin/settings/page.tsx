@@ -20,7 +20,7 @@ const SettingsPage = () => {
     <div className="space-y-8">
       <PageHeading
         title="Store Settings"
-        description="Store operations now have a cleaner dedicated space, while homepage content lives in Website Studio."
+        description="Store operations now have a cleaner dedicated space, while homepage content lives in Nikeshop."
       />
 
       <section className="rounded-[32px] border border-black/10 bg-white p-6 shadow-[0_18px_50px_rgba(17,17,17,0.05)] sm:p-8">
@@ -32,7 +32,7 @@ const SettingsPage = () => {
             Store operations stay focused here.
           </h2>
           <p className="mt-3 text-sm leading-7 text-gray-500 sm:text-base">
-            Homepage banners, slider content, announcement bars, and merchandising sections are now separated into the dedicated Website Studio so this page can stay focused on store-level controls.
+            Homepage banners, slider content, announcement bars, and merchandising sections are now separated into the dedicated Nikeshop area so this page can stay focused on store-level controls.
           </p>
         </div>
 

@@ -10,8 +10,8 @@ const WebsitePage = async () => {
   return (
     <div className="space-y-8">
       <PageHeading
-        title="Website Studio"
-        description="Edit everything customers see on the homepage from a dedicated premium content workspace."
+        title="Nikeshop"
+        description="Edit the homepage, Sale page, New Arrivals page, and Blog page from a dedicated premium content workspace."
         action={
           <Link
             href="/"
@@ -31,20 +31,20 @@ const WebsitePage = async () => {
               Website Control
             </div>
             <h2 className="mt-4 text-3xl font-semibold text-[#111111] sm:text-4xl">
-              Control the announcement bar, hero offer, slider, newsletter, and every merchandising section from here.
+              Control the announcement bar, hero offer, slider, newsletter, Sale page, New Arrivals page, Blog page, and every merchandising section from here.
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-500 sm:text-base">
               This studio keeps homepage storytelling separate from store operations, so editing customer-facing content feels fast, focused, and premium.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              "Header brand and menu",
+            {[ 
               "Announcement bar",
               "Navbar promo pill",
               "Hero offer and countdown",
               "Creative slider",
-              "Best sellers and arrivals",
+              "Sale and arrival pages",
+              "Editorial blog page",
               "Why choose us cards",
             ].map((item) => (
               <div

@@ -3,23 +3,31 @@
 import { cn } from "@/lib/utils";
 import {
   Boxes,
+  BadgePercent,
   ChevronRight,
   Home,
   LayoutDashboard,
   MonitorSmartphone,
   Package,
   Palette,
+  PanelTop,
   Settings,
   Shirt,
+  Sparkles,
   Store,
   Tag,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const workspaceRoutes = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/website", label: "Website Studio", icon: MonitorSmartphone },
+  { href: "/admin/website", label: "Nikeshop", icon: MonitorSmartphone },
+  { href: "/admin/header", label: "Header", icon: PanelTop },
+  { href: "/admin/new-arrivals", label: "New Arrivals Page", icon: Sparkles },
+  { href: "/admin/sale", label: "Sale Page", icon: BadgePercent },
+  { href: "/admin/blogs", label: "Blog Posts", icon: PanelTop },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: Tag },
   { href: "/admin/billboards", label: "Billboards", icon: Home },
@@ -82,12 +90,20 @@ const NavSection = ({
 
 const AdminNav = () => {
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    [...workspaceRoutes, ...commerceRoutes].forEach((route) => {
+      router.prefetch(route.href);
+    });
+  }, [router]);
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-[292px] shrink-0 border-r border-white/10 bg-[linear-gradient(180deg,_#111111_0%,_#171717_48%,_#0b0b0b_100%)] p-5 text-white xl:block">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[292px] shrink-0 border-r border-white/10 bg-[linear-gradient(180deg,_#111111_0%,_#171717_48%,_#0b0b0b_100%)] p-5 text-white xl:block">
       <div className="flex h-full flex-col">
         <Link
           href="/admin"
+          prefetch
           className="rounded-[28px] border border-white/10 bg-white/5 p-4"
         >
           <div className="flex items-center gap-3">
@@ -96,35 +112,19 @@ const AdminNav = () => {
             </div>
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/45">
-                Nike Shop
+                Nikeshop
               </p>
-              <p className="mt-1 text-lg font-semibold text-white">Admin Studio</p>
+              <p className="mt-1 text-lg font-semibold text-white">Nikeshop Admin</p>
             </div>
           </div>
           <p className="mt-4 text-sm leading-6 text-white/60">
-            Manage storefront content, inventory, and merchandising from one premium workspace.
+            Manage your store content and inventory in one place.
           </p>
         </Link>
 
-        <div className="mt-8 space-y-7">
+        <div className="mt-8 flex-1 space-y-7 overflow-y-auto pr-1">
           <NavSection pathname={pathname} routes={workspaceRoutes} title="Workspace" />
           <NavSection pathname={pathname} routes={commerceRoutes} title="Commerce" />
-        </div>
-
-        <div className="mt-auto rounded-[28px] border border-white/10 bg-white/5 p-4">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-white/40">
-            Live Preview
-          </p>
-          <p className="mt-2 text-sm leading-6 text-white/65">
-            Open the storefront and instantly review homepage changes from Website Studio.
-          </p>
-          <Link
-            href="/"
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#111111]"
-          >
-            <MonitorSmartphone className="h-4 w-4" />
-            Open Storefront
-          </Link>
         </div>
       </div>
     </aside>

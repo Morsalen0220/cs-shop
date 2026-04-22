@@ -7,13 +7,14 @@ import {
   saveHomeSettings,
 } from "@/lib/home-settings";
 import {
-  HeaderMenuItem,
+  BlogPageSettings,
+  CollectionHeroSettings,
   HomeSettings,
   Product,
   ProductSectionSettings,
   PromoCodeSettings,
 } from "@/types";
-import { MonitorSmartphone, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -32,20 +33,26 @@ const productSections = [
   },
   {
     key: "newArrivalsSection" as const,
-    eyebrow: "New Arrivals Section",
-    helper: "Latest products with New badge",
+    eyebrow: "New Arrivals Page",
+    helper: "Latest products for homepage and /new-arrivals",
   },
   {
     key: "flashSaleSection" as const,
-    eyebrow: "Flash Sale Section",
-    helper: "Limited-time deals and countdown support",
+    eyebrow: "Sale Page",
+    helper: "Limited-time deals for homepage and /sale",
   },
 ];
 
 const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const [settings, setSettings] = useState<HomeSettings>(defaultHomeSettings);
+  const [uploadingHeroKey, setUploadingHeroKey] = useState<
+    "newArrivalsHero" | "saleHero" | null
+  >(null);
+  const [uploadingBlogTarget, setUploadingBlogTarget] = useState<string | null>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     setSettings(readHomeSettings());
   }, []);
 
@@ -82,67 +89,173 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
     }));
   };
 
-  const updateHeaderField = <
-    F extends keyof HomeSettings["header"]
+  const updateHeroSection = <
+    K extends "newArrivalsHero" | "saleHero",
+    F extends keyof CollectionHeroSettings
   >(
+    key: K,
     field: F,
-    value: HomeSettings["header"][F]
+    value: CollectionHeroSettings[F]
   ) => {
     setSettings((current) => ({
       ...current,
-      header: {
-        ...current.header,
+      [key]: {
+        ...current[key],
         [field]: value,
       },
     }));
   };
 
-  const addHeaderMenuItem = () => {
+  const updateBlogField = <F extends keyof BlogPageSettings>(
+    field: F,
+    value: BlogPageSettings[F]
+  ) => {
     setSettings((current) => ({
       ...current,
-      header: {
-        ...current.header,
-        menuItems: [
-          ...current.header.menuItems,
-          {
-            id: `nav-item-${Date.now()}`,
-            label: "New menu item",
-            href: "/",
-            type: "link",
-          },
-        ],
+      blog: {
+        ...current.blog,
+        [field]: value,
       },
     }));
   };
 
-  const updateHeaderMenuItem = <
-    F extends keyof HeaderMenuItem
-  >(
+  const updateBlogCategory = (
     index: number,
-    field: F,
-    value: HeaderMenuItem[F]
+    field: keyof BlogPageSettings["categories"][number],
+    value: string
   ) => {
     setSettings((current) => ({
       ...current,
-      header: {
-        ...current.header,
-        menuItems: current.header.menuItems.map((item, itemIndex) =>
+      blog: {
+        ...current.blog,
+        categories: current.blog.categories.map((item, itemIndex) =>
           itemIndex === index ? { ...item, [field]: value } : item
         ),
       },
     }));
   };
 
-  const removeHeaderMenuItem = (index: number) => {
+  const updateBlogArticle = (
+    key: "featuredPosts" | "explorePosts",
+    index: number,
+    field: keyof BlogPageSettings["featuredPosts"][number],
+    value: string
+  ) => {
     setSettings((current) => ({
       ...current,
-      header: {
-        ...current.header,
-        menuItems: current.header.menuItems.filter(
-          (_, itemIndex) => itemIndex !== index
+      blog: {
+        ...current.blog,
+        [key]: current.blog[key].map((item, itemIndex) =>
+          itemIndex === index ? { ...item, [field]: value } : item
         ),
       },
     }));
+  };
+
+  const updateTrendingPost = (
+    index: number,
+    field: keyof BlogPageSettings["trendingPosts"][number],
+    value: string
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      blog: {
+        ...current.blog,
+        trendingPosts: current.blog.trendingPosts.map((item, itemIndex) =>
+          itemIndex === index ? { ...item, [field]: value } : item
+        ),
+      },
+    }));
+  };
+
+  const updateBlogNewsletter = (
+    field: keyof BlogPageSettings["newsletter"],
+    value: string
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      blog: {
+        ...current.blog,
+        newsletter: {
+          ...current.blog.newsletter,
+          [field]: value,
+        },
+      },
+    }));
+  };
+
+  const updateBlogPromise = (
+    index: number,
+    field: keyof BlogPageSettings["promises"][number],
+    value: string
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      blog: {
+        ...current.blog,
+        promises: current.blog.promises.map((item, itemIndex) =>
+          itemIndex === index ? { ...item, [field]: value } : item
+        ),
+      },
+    }));
+  };
+
+  const uploadHeroImage = async (
+    key: "newArrivalsHero" | "saleHero",
+    field: "imageUrl" | "secondaryImageUrl",
+    file: File
+  ) => {
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+    setUploadingHeroKey(key);
+
+    try {
+      const response = await fetch("/api/demo-store/admin/upload", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      updateHeroSection(key, field, data.url as string);
+      toast.success("Hero image uploaded");
+    } catch {
+      toast.error("Hero image upload failed");
+    } finally {
+      setUploadingHeroKey(null);
+    }
+  };
+
+  const uploadBlogImage = async (
+    target: string,
+    onComplete: (url: string) => void,
+    file: File
+  ) => {
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+    setUploadingBlogTarget(target);
+
+    try {
+      const response = await fetch("/api/demo-store/admin/upload", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json();
+      onComplete(data.url as string);
+      toast.success("Blog image uploaded");
+    } catch {
+      toast.error("Blog image upload failed");
+    } finally {
+      setUploadingBlogTarget(null);
+    }
   };
 
   const addPromoCode = () => {
@@ -215,135 +328,18 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
     toast.success("Website settings reset");
   };
 
+  if (!isMounted) {
+    return (
+      <div className="space-y-4 pb-28">
+        <div className="h-40 animate-pulse rounded-3xl border border-black/10 bg-white" />
+        <div className="h-64 animate-pulse rounded-3xl border border-black/10 bg-white" />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-28">
       <section className="grid gap-6 xl:grid-cols-2">
-        <div
-          className={`${sectionCardClass} bg-[linear-gradient(135deg,_#111111_0%,_#1f2937_100%)] text-white`}
-        >
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em]">
-            <MonitorSmartphone className="h-4 w-4" />
-            Website Studio
-          </div>
-          <div>
-            <h2 className="text-3xl font-semibold">
-              Everything visible on the homepage can be edited here.
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-white/70">
-              Change marketing copy, product highlights, slider behavior, and trust-building sections without touching storefront code.
-            </p>
-          </div>
-        </div>
-
-        <div className={sectionCardClass}>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-              Header
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-gray-950">
-              Brand text and navigation menu
-            </h2>
-            <p className="mt-2 text-sm leading-7 text-gray-500">
-              Update the logo name, tagline, and the navbar menu items customers see across the storefront.
-            </p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm font-medium">Logo name</label>
-              <input
-                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
-                onChange={(event) =>
-                  updateHeaderField("brandLabel", event.target.value)
-                }
-                value={settings.header.brandLabel}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Tagline</label>
-              <input
-                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
-                onChange={(event) =>
-                  updateHeaderField("tagline", event.target.value)
-                }
-                value={settings.header.tagline}
-              />
-            </div>
-          </div>
-          <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-950">Menu items</p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Add new links, edit labels and URLs, or keep a categories dropdown in the header.
-                </p>
-              </div>
-              <Button className="bg-[#111111]" onClick={addHeaderMenuItem}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add menu item
-              </Button>
-            </div>
-
-            <div className="mt-5 grid gap-4">
-              {settings.header.menuItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  className="rounded-[22px] border border-black/10 bg-white p-4"
-                >
-                  <div className="grid gap-4 lg:grid-cols-[1fr_180px_1fr_auto] lg:items-end">
-                    <div>
-                      <label className="text-sm font-medium">Menu label</label>
-                      <input
-                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
-                        onChange={(event) =>
-                          updateHeaderMenuItem(index, "label", event.target.value)
-                        }
-                        value={item.label}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Item type</label>
-                      <select
-                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
-                        onChange={(event) =>
-                          updateHeaderMenuItem(
-                            index,
-                            "type",
-                            event.target.value as HeaderMenuItem["type"]
-                          )
-                        }
-                        value={item.type}
-                      >
-                        <option value="link">Link</option>
-                        <option value="categories">Categories dropdown</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">
-                        {item.type === "categories" ? "Fallback link" : "Link URL"}
-                      </label>
-                      <input
-                        className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
-                        onChange={(event) =>
-                          updateHeaderMenuItem(index, "href", event.target.value)
-                        }
-                        placeholder={item.type === "categories" ? "/shop" : "/about"}
-                        value={item.href}
-                      />
-                    </div>
-                    <Button
-                      className="border border-black/10 bg-white text-[#111111]"
-                      onClick={() => removeHeaderMenuItem(index)}
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Remove
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         <div className={sectionCardClass}>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
@@ -798,6 +794,233 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
         </div>
       </section>
 
+      <section className={sectionCardClass}>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+            New Arrivals Hero
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+            Edit /new-arrivals banner text and images
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-gray-500">
+            These fields control the top hero banner on the New Arrivals page.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm font-medium">Eyebrow text</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("newArrivalsHero", "eyebrow", event.target.value)
+              }
+              value={settings.newArrivalsHero.eyebrow}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Side label</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("newArrivalsHero", "sideLabel", event.target.value)
+              }
+              value={settings.newArrivalsHero.sideLabel}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Main title</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("newArrivalsHero", "title", event.target.value)
+              }
+              value={settings.newArrivalsHero.title}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">CTA button</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("newArrivalsHero", "ctaLabel", event.target.value)
+              }
+              value={settings.newArrivalsHero.ctaLabel}
+            />
+          </div>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Hero description</label>
+          <textarea
+            className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+            onChange={(event) =>
+              updateHeroSection("newArrivalsHero", "description", event.target.value)
+            }
+            value={settings.newArrivalsHero.description}
+          />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm font-medium">Main hero image</label>
+            <input
+              accept="image/*"
+              className="mt-2 block w-full text-sm"
+              disabled={uploadingHeroKey === "newArrivalsHero"}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  uploadHeroImage("newArrivalsHero", "imageUrl", file);
+                }
+              }}
+              type="file"
+            />
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("newArrivalsHero", "imageUrl", event.target.value)
+              }
+              placeholder="/images/nike-reactx.png"
+              value={settings.newArrivalsHero.imageUrl}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Second hero image</label>
+            <input
+              accept="image/*"
+              className="mt-2 block w-full text-sm"
+              disabled={uploadingHeroKey === "newArrivalsHero"}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  uploadHeroImage("newArrivalsHero", "secondaryImageUrl", file);
+                }
+              }}
+              type="file"
+            />
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection(
+                  "newArrivalsHero",
+                  "secondaryImageUrl",
+                  event.target.value
+                )
+              }
+              placeholder="/images/image-1.jpg"
+              value={settings.newArrivalsHero.secondaryImageUrl}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className={sectionCardClass}>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+            Sale Hero
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+            Edit /sale banner text and image
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-gray-500">
+            These fields control the large Sale page hero banner.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm font-medium">Eyebrow text</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "eyebrow", event.target.value)
+              }
+              value={settings.saleHero.eyebrow}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Offer circle text</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "sideLabel", event.target.value)
+              }
+              value={settings.saleHero.sideLabel}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Title prefix</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "title", event.target.value)
+              }
+              value={settings.saleHero.title}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Highlight text</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "highlightText", event.target.value)
+              }
+              value={settings.saleHero.highlightText}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Subtitle</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "subtitle", event.target.value)
+              }
+              value={settings.saleHero.subtitle}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">CTA button</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateHeroSection("saleHero", "ctaLabel", event.target.value)
+              }
+              value={settings.saleHero.ctaLabel}
+            />
+          </div>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Hero description</label>
+          <textarea
+            className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+            onChange={(event) =>
+              updateHeroSection("saleHero", "description", event.target.value)
+            }
+            value={settings.saleHero.description}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium">Hero image</label>
+          <input
+            accept="image/*"
+            className="mt-2 block w-full text-sm"
+            disabled={uploadingHeroKey === "saleHero"}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                uploadHeroImage("saleHero", "imageUrl", file);
+              }
+            }}
+            type="file"
+          />
+          <input
+            className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+            onChange={(event) =>
+              updateHeroSection("saleHero", "imageUrl", event.target.value)
+            }
+            placeholder="/images/nike-reactx.png"
+            value={settings.saleHero.imageUrl}
+          />
+        </div>
+      </section>
+
       {productSections.map((sectionMeta) => {
         const section = settings[sectionMeta.key] as ProductSectionSettings;
 
@@ -957,7 +1180,532 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
         </div>
       </section>
 
-      <div className="sticky bottom-4 flex flex-wrap gap-3 rounded-full border border-black/10 bg-white/90 p-3 backdrop-blur">
+      <section className={sectionCardClass}>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+            Blog Page
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+            Control the new /blog editorial page
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-7 text-gray-500">
+            Update the hero, category pills, featured stories, trending list, newsletter card, and bottom highlights for the blog page from here.
+          </p>
+        </div>
+
+        <label className="flex items-center gap-3 text-sm font-medium">
+          <input
+            checked={settings.blog.enabled}
+            onChange={(event) => updateBlogField("enabled", event.target.checked)}
+            type="checkbox"
+          />
+          Show blog page
+        </label>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">Hero section</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="text-sm font-medium">Breadcrumb / eyebrow</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroEyebrow", event.target.value)}
+                value={settings.blog.heroEyebrow}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">CTA button</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroCtaLabel", event.target.value)}
+                value={settings.blog.heroCtaLabel}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Title start</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroTitleStart", event.target.value)}
+                value={settings.blog.heroTitleStart}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Title accent</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroTitleAccent", event.target.value)}
+                value={settings.blog.heroTitleAccent}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Title end</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroTitleEnd", event.target.value)}
+                value={settings.blog.heroTitleEnd}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Circle badge text</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) => updateBlogField("heroBadgeText", event.target.value)}
+                value={settings.blog.heroBadgeText}
+              />
+            </div>
+          </div>
+          <div className="mt-4">
+            <label className="text-sm font-medium">Hero description</label>
+            <textarea
+              className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+              onChange={(event) => updateBlogField("heroDescription", event.target.value)}
+              value={settings.blog.heroDescription}
+            />
+          </div>
+          <div className="mt-4">
+            <label className="text-sm font-medium">Hero image</label>
+            <input
+              accept="image/*"
+              className="mt-2 block w-full text-sm"
+              disabled={uploadingBlogTarget === "heroImage"}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) {
+                  uploadBlogImage("heroImage", (url) => updateBlogField("heroImageUrl", url), file);
+                }
+              }}
+              type="file"
+            />
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) => updateBlogField("heroImageUrl", event.target.value)}
+              value={settings.blog.heroImageUrl}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">Category pills</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {settings.blog.categories.map((category, index) => (
+              <div key={category.id} className="rounded-2xl border bg-white p-4">
+                <label className="text-sm font-medium">Category name</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogCategory(index, "label", event.target.value)
+                  }
+                  value={category.label}
+                />
+                <label className="mt-4 block text-sm font-medium">Count label</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogCategory(index, "countLabel", event.target.value)
+                  }
+                  value={category.countLabel}
+                />
+                <label className="mt-4 block text-sm font-medium">Image</label>
+                <input
+                  accept="image/*"
+                  className="mt-2 block w-full text-sm"
+                  disabled={uploadingBlogTarget === `category-${index}`}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      uploadBlogImage(
+                        `category-${index}`,
+                        (url) => updateBlogCategory(index, "imageUrl", url),
+                        file
+                      );
+                    }
+                  }}
+                  type="file"
+                />
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogCategory(index, "imageUrl", event.target.value)
+                  }
+                  value={category.imageUrl}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">Featured stories</p>
+          <div className="mt-4">
+            <label className="text-sm font-medium">Section heading</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) => updateBlogField("featuredHeading", event.target.value)}
+              value={settings.blog.featuredHeading}
+            />
+          </div>
+          <div className="mt-4 grid gap-4 xl:grid-cols-3">
+            {settings.blog.featuredPosts.map((article, index) => (
+              <div key={article.id} className="rounded-2xl border bg-white p-4">
+                <p className="text-sm font-semibold text-[#111111]">
+                  Story {index + 1}
+                </p>
+                <label className="mt-3 block text-sm font-medium">Tag</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle("featuredPosts", index, "tag", event.target.value)
+                  }
+                  value={article.tag}
+                />
+                <label className="mt-4 block text-sm font-medium">Title</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle("featuredPosts", index, "title", event.target.value)
+                  }
+                  value={article.title}
+                />
+                <label className="mt-4 block text-sm font-medium">Excerpt</label>
+                <textarea
+                  className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle(
+                      "featuredPosts",
+                      index,
+                      "excerpt",
+                      event.target.value
+                    )
+                  }
+                  value={article.excerpt}
+                />
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="text-sm font-medium">Date label</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogArticle(
+                          "featuredPosts",
+                          index,
+                          "dateLabel",
+                          event.target.value
+                        )
+                      }
+                      value={article.dateLabel}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Read time</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogArticle(
+                          "featuredPosts",
+                          index,
+                          "readTime",
+                          event.target.value
+                        )
+                      }
+                      value={article.readTime}
+                    />
+                  </div>
+                </div>
+                <label className="mt-4 block text-sm font-medium">Image</label>
+                <input
+                  accept="image/*"
+                  className="mt-2 block w-full text-sm"
+                  disabled={uploadingBlogTarget === `featured-${index}`}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      uploadBlogImage(
+                        `featured-${index}`,
+                        (url) =>
+                          updateBlogArticle("featuredPosts", index, "imageUrl", url),
+                        file
+                      );
+                    }
+                  }}
+                  type="file"
+                />
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle(
+                      "featuredPosts",
+                      index,
+                      "imageUrl",
+                      event.target.value
+                    )
+                  }
+                  value={article.imageUrl}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">More to explore</p>
+          <div className="mt-4 grid gap-4 xl:grid-cols-2">
+            {settings.blog.explorePosts.map((article, index) => (
+              <div key={article.id} className="rounded-2xl border bg-white p-4">
+                <p className="text-sm font-semibold text-[#111111]">
+                  Explore card {index + 1}
+                </p>
+                <div className="mt-3 grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="text-sm font-medium">Tag</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogArticle("explorePosts", index, "tag", event.target.value)
+                      }
+                      value={article.tag}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Read time</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogArticle(
+                          "explorePosts",
+                          index,
+                          "readTime",
+                          event.target.value
+                        )
+                      }
+                      value={article.readTime}
+                    />
+                  </div>
+                </div>
+                <label className="mt-4 block text-sm font-medium">Title</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle("explorePosts", index, "title", event.target.value)
+                  }
+                  value={article.title}
+                />
+                <label className="mt-4 block text-sm font-medium">Excerpt</label>
+                <textarea
+                  className="mt-2 min-h-[90px] w-full rounded-2xl border px-3 py-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle(
+                      "explorePosts",
+                      index,
+                      "excerpt",
+                      event.target.value
+                    )
+                  }
+                  value={article.excerpt}
+                />
+                <label className="mt-4 block text-sm font-medium">Date</label>
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle(
+                      "explorePosts",
+                      index,
+                      "dateLabel",
+                      event.target.value
+                    )
+                  }
+                  value={article.dateLabel}
+                />
+                <label className="mt-4 block text-sm font-medium">Image</label>
+                <input
+                  accept="image/*"
+                  className="mt-2 block w-full text-sm"
+                  disabled={uploadingBlogTarget === `explore-${index}`}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      uploadBlogImage(
+                        `explore-${index}`,
+                        (url) =>
+                          updateBlogArticle("explorePosts", index, "imageUrl", url),
+                        file
+                      );
+                    }
+                  }}
+                  type="file"
+                />
+                <input
+                  className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateBlogArticle(
+                      "explorePosts",
+                      index,
+                      "imageUrl",
+                      event.target.value
+                    )
+                  }
+                  value={article.imageUrl}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+            <p className="text-sm font-semibold text-[#111111]">Trending sidebar</p>
+            <div className="mt-4 space-y-4">
+              {settings.blog.trendingPosts.map((article, index) => (
+                <div key={article.id} className="rounded-2xl border bg-white p-4">
+                  <p className="text-sm font-semibold text-[#111111]">
+                    Trending item {index + 1}
+                  </p>
+                  <label className="mt-3 block text-sm font-medium">Title</label>
+                  <input
+                    className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                    onChange={(event) =>
+                      updateTrendingPost(index, "title", event.target.value)
+                    }
+                    value={article.title}
+                  />
+                  <label className="mt-4 block text-sm font-medium">Date label</label>
+                  <input
+                    className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                    onChange={(event) =>
+                      updateTrendingPost(index, "dateLabel", event.target.value)
+                    }
+                    value={article.dateLabel}
+                  />
+                  <label className="mt-4 block text-sm font-medium">Image</label>
+                  <input
+                    accept="image/*"
+                    className="mt-2 block w-full text-sm"
+                    disabled={uploadingBlogTarget === `trending-${index}`}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        uploadBlogImage(
+                          `trending-${index}`,
+                          (url) => updateTrendingPost(index, "imageUrl", url),
+                          file
+                        );
+                      }
+                    }}
+                    type="file"
+                  />
+                  <input
+                    className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                    onChange={(event) =>
+                      updateTrendingPost(index, "imageUrl", event.target.value)
+                    }
+                    value={article.imageUrl}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+              <p className="text-sm font-semibold text-[#111111]">Newsletter card</p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="text-sm font-medium">Title</label>
+                  <input
+                    className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                    onChange={(event) =>
+                      updateBlogNewsletter("title", event.target.value)
+                    }
+                    value={settings.blog.newsletter.title}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Button label</label>
+                  <input
+                    className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                    onChange={(event) =>
+                      updateBlogNewsletter("buttonLabel", event.target.value)
+                    }
+                    value={settings.blog.newsletter.buttonLabel}
+                  />
+                </div>
+              </div>
+              <label className="mt-4 block text-sm font-medium">Description</label>
+              <textarea
+                className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+                onChange={(event) =>
+                  updateBlogNewsletter("description", event.target.value)
+                }
+                value={settings.blog.newsletter.description}
+              />
+              <label className="mt-4 block text-sm font-medium">Placeholder</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateBlogNewsletter("placeholder", event.target.value)
+                }
+                value={settings.blog.newsletter.placeholder}
+              />
+              <label className="mt-4 block text-sm font-medium">Image</label>
+              <input
+                accept="image/*"
+                className="mt-2 block w-full text-sm"
+                disabled={uploadingBlogTarget === "newsletter-image"}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    uploadBlogImage(
+                      "newsletter-image",
+                      (url) => updateBlogNewsletter("imageUrl", url),
+                      file
+                    );
+                  }
+                }}
+                type="file"
+              />
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateBlogNewsletter("imageUrl", event.target.value)
+                }
+                value={settings.blog.newsletter.imageUrl}
+              />
+            </div>
+
+            <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+              <p className="text-sm font-semibold text-[#111111]">Bottom highlights</p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {settings.blog.promises.map((item, index) => (
+                  <div key={item.id} className="rounded-2xl border bg-white p-4">
+                    <p className="text-sm font-semibold text-[#111111]">
+                      Highlight {index + 1}
+                    </p>
+                    <label className="mt-3 block text-sm font-medium">Title</label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogPromise(index, "title", event.target.value)
+                      }
+                      value={item.title}
+                    />
+                    <label className="mt-4 block text-sm font-medium">
+                      Description
+                    </label>
+                    <input
+                      className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                      onChange={(event) =>
+                        updateBlogPromise(index, "description", event.target.value)
+                      }
+                      value={item.description}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="sticky bottom-4 z-20 flex flex-wrap gap-3 rounded-[28px] border border-black/10 bg-white/90 p-3 shadow-[0_18px_40px_rgba(17,17,17,0.08)] backdrop-blur">
         <Button className="bg-[#111111]" onClick={handleSave}>
           Save website settings
         </Button>

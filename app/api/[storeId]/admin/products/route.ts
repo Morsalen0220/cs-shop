@@ -8,10 +8,23 @@ const createId = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const normalizeImageUrls = (value: unknown) => {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => String(item || "").trim())
+      .filter(Boolean)
+      .slice(0, 3);
+  }
+
+  const fallback = String(value || "").trim();
+  return fallback ? [fallback] : [];
+};
+
 export async function POST(request: Request) {
   const body = await request.json();
   const name = String(body.name || "");
   const id = createId(name);
+  const imageUrls = normalizeImageUrls(body.imageUrls ?? body.imageUrl);
 
   if (!id) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -36,11 +49,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error: imageError } = await supabase.from("product_images").insert({
-    id: `${id}-image-1`,
+  const imageRows = (imageUrls.length > 0
+    ? imageUrls
+    : ["/images/nike-reactx.png"]).map((url, index) => ({
+    id: `${id}-image-${index + 1}`,
     product_id: id,
-    url: String(body.imageUrl || "/images/nike-reactx.png"),
-  });
+    url,
+  }));
+
+  const { error: imageError } = await supabase.from("product_images").insert(imageRows);
 
   if (imageError) {
     return NextResponse.json({ error: imageError.message }, { status: 500 });

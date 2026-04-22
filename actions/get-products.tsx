@@ -7,6 +7,7 @@ interface Query {
   colorId?: string;
   sizeId?: string;
   description?: string;
+  q?: string;
   includeArchived?: boolean;
   isFeatured?: boolean;
 }
@@ -22,6 +23,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     url: apiUrl,
     query: {
       description: query.description,
+      q: query.q,
       colorId: query.colorId,
       sizeId: query.sizeId,
       categoryId: query.categoryId,
@@ -31,7 +33,11 @@ const getProducts = async (query: Query): Promise<Product[]> => {
   });
   
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      next: {
+        revalidate: 30,
+      },
+    });
 
     if (!res.ok) {
       return [];

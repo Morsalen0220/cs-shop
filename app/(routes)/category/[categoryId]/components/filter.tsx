@@ -10,26 +10,37 @@ import { Color, Size } from "@/types";
 interface FilterProps {
   data: (Size | Color)[];
   name: string;
+  onValueChange?: (value: string | null) => void;
+  selectedValue?: string | null;
   valueKey: string;
 }
 
-const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
+const Filter: React.FC<FilterProps> = ({
+  data,
+  name,
+  onValueChange,
+  selectedValue: controlledSelectedValue,
+  valueKey,
+}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const selectedValue = searchParams.get(valueKey);
+  const selectedValue = controlledSelectedValue ?? searchParams.get(valueKey);
 
   const onClick = (id: string) => {
+    const nextValue = selectedValue === id ? null : id;
+
+    if (onValueChange) {
+      onValueChange(nextValue);
+      return;
+    }
+
     const current = qs.parse(searchParams.toString());
 
     const query = {
       ...current,
-      [valueKey]: id,
+      [valueKey]: nextValue,
     };
-
-    if (current[valueKey] === id) {
-      query[valueKey] = null;
-    }
 
     const url = qs.stringifyUrl(
       {

@@ -115,11 +115,102 @@ export interface ProductSectionSettings {
   badgeText: string;
 }
 
+export interface CollectionHeroSettings {
+  eyebrow: string;
+  title: string;
+  highlightText: string;
+  subtitle: string;
+  description: string;
+  ctaLabel: string;
+  sideLabel: string;
+  imageUrl: string;
+  secondaryImageUrl: string;
+}
+
 export interface WhyChooseUsSettings {
   enabled: boolean;
   title: string;
   description: string;
   items: HomeFeatureItem[];
+}
+
+export interface BlogCategoryItem {
+  id: string;
+  label: string;
+  countLabel: string;
+  imageUrl: string;
+}
+
+export interface BlogArticleItem {
+  id: string;
+  tag: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  dateLabel: string;
+  readTime: string;
+  imageUrl: string;
+}
+
+export interface BlogTrendingItem {
+  id: string;
+  title: string;
+  dateLabel: string;
+  imageUrl: string;
+}
+
+export interface BlogNewsletterSettings {
+  title: string;
+  description: string;
+  placeholder: string;
+  buttonLabel: string;
+  imageUrl: string;
+}
+
+export interface BlogPromiseItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface BlogPageSettings {
+  enabled: boolean;
+  heroEyebrow: string;
+  heroTitleStart: string;
+  heroTitleAccent: string;
+  heroTitleEnd: string;
+  heroDescription: string;
+  heroCtaLabel: string;
+  heroImageUrl: string;
+  heroBadgeText: string;
+  featuredHeading: string;
+  categories: BlogCategoryItem[];
+  featuredPosts: BlogArticleItem[];
+  explorePosts: BlogArticleItem[];
+  trendingPosts: BlogTrendingItem[];
+  newsletter: BlogNewsletterSettings;
+  promises: BlogPromiseItem[];
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  coverImageUrl: string;
+  readTime: string;
+  isPublished: boolean;
+  createdAt: string;
+}
+
+export interface BlogPostListResponse {
+  posts: BlogPost[];
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalPosts: number;
 }
 
 export interface HomeSettings {
@@ -131,7 +222,10 @@ export interface HomeSettings {
   heroSlider: HeroSliderSettings;
   newsletterSection: NewsletterSectionSettings;
   bestSellerSection: ProductSectionSettings;
+  newArrivalsHero: CollectionHeroSettings;
   newArrivalsSection: ProductSectionSettings;
+  saleHero: CollectionHeroSettings;
   flashSaleSection: ProductSectionSettings;
   whyChooseUsSection: WhyChooseUsSettings;
+  blog: BlogPageSettings;
 }

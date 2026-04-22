@@ -7,10 +7,9 @@ import { cn } from "@/lib/utils";
 import { HomeSettings, Product } from "@/types";
 import {
   ArrowRight,
-  BadgePercent,
-  Mail,
   ShieldCheck,
   Sparkles,
+  Star,
   TimerReset,
   Truck,
 } from "lucide-react";
@@ -23,8 +22,12 @@ interface HomeExperienceProps {
   products: Product[];
 }
 
+const offerHighlights = [
+  "Members-first markdowns",
+  "Same-day style picks",
+  "Fresh drops every week",
+];
 const icons = [Truck, TimerReset, ShieldCheck];
-
 const HomeExperience: React.FC<HomeExperienceProps> = ({
   heroFontClassName,
   products,
@@ -83,90 +86,99 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
   return (
     <div className="pb-16">
       <section className="overflow-hidden rounded-[36px] border border-black/10 bg-[radial-gradient(circle_at_top_left,_rgba(255,109,56,0.18),_transparent_33%),linear-gradient(135deg,_#fff4ec_0%,_#ffffff_45%,_#eef2ff_100%)] px-4 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-        <div className="grid gap-10 xl:grid-cols-[1fr_1fr] xl:items-center">
-          <div className="space-y-8">
+        <div className="overflow-hidden rounded-[36px] border border-white/70 bg-[radial-gradient(circle_at_bottom_left,_rgba(0,186,211,0.1),_transparent_24%),linear-gradient(135deg,_rgba(255,255,255,0.96)_0%,_rgba(248,252,255,0.98)_58%,_rgba(239,247,250,0.98)_100%)] px-5 py-8 text-[#111111] shadow-[0_26px_70px_rgba(4,12,18,0.08)] backdrop-blur sm:px-8 lg:px-10 lg:py-10">
+          <div className="grid gap-10 xl:grid-cols-[0.9fr_1.1fr] xl:items-center">
+            <div className="space-y-8">
             {settings.promoSection.enabled ? (
-              <div className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white">
-                  <BadgePercent className="h-4 w-4" />
-                  {settings.promoSection.badgeText}
+              <div className="space-y-7">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700 shadow-[0_12px_26px_rgba(34,211,238,0.10)]">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    {settings.promoSection.badgeText}
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-[#4b5563]">
+                    Curated weekly offers
+                  </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <h1
                     className={cn(
-                      "max-w-3xl text-5xl font-semibold italic leading-none text-[#111111] sm:text-7xl lg:text-8xl",
+                      "max-w-[8.5ch] text-5xl font-semibold leading-[0.92] text-[#111111] sm:text-6xl lg:text-7xl",
                       heroFontClassName
                     )}
                   >
-                    NIKE SHOP
-                  </h1>
-                  <p className="max-w-2xl text-lg text-gray-700">
                     {settings.promoSection.title}
-                  </p>
-                  <p className="max-w-xl text-sm leading-6 text-gray-500 sm:text-base">
+                  </h1>
+                  <p className="max-w-xl text-sm leading-7 text-gray-600 sm:text-base">
                     {settings.promoSection.description}
                   </p>
+                  <div className="flex flex-wrap gap-2.5">
+                    {offerHighlights.map((item) => (
+                      <div
+                        key={item}
+                        className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3.5 py-2 text-xs font-medium text-[#334155] shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur"
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="rounded-[28px] border border-black/10 bg-white/80 p-5 shadow-[0_20px_60px_rgba(17,17,17,0.08)]">
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.26em] text-gray-500">
-                        Discount banner
-                      </p>
-                      <p className="mt-2 text-2xl font-semibold text-[#111111]">
-                        {settings.promoSection.discountText}
-                      </p>
-                    </div>
-                    <Button className="flex items-center gap-2 bg-[#111111]">
+                <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+                    <Button className="group h-14 rounded-[18px] bg-[linear-gradient(135deg,_#0891b2_0%,_#06b6d4_100%)] px-8 text-base text-white shadow-[0_20px_40px_rgba(8,145,178,0.24)] transition-all duration-300 hover:translate-y-[-1px] hover:opacity-100 hover:shadow-[0_24px_48px_rgba(8,145,178,0.30)]">
                       {settings.promoSection.ctaLabel}
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </Button>
-                  </div>
-                  {settings.promoSection.countdownEnabled ? (
-                    <div className="mt-5">
-                      <Countdown target={settings.promoSection.countdownTarget} />
+                  <div className="flex min-h-[56px] items-center rounded-[20px] border border-black/10 bg-white/85 px-4 py-3 shadow-[0_16px_34px_rgba(15,23,42,0.08)] backdrop-blur">
+                    <div className="flex flex-wrap items-center gap-3 text-[#111111]">
+                      <div className="flex items-center gap-1 text-[#ffd34d]">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Star key={index} className="h-4 w-4 fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-base font-semibold">4.8</p>
+                      <p className="text-sm text-gray-500">(11.6k total reviews)</p>
                     </div>
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
-
-            {settings.newsletterSection.enabled ? (
-              <div className="rounded-[30px] border border-black/10 bg-[#111111] px-6 py-6 text-white shadow-[0_24px_70px_rgba(17,17,17,0.22)]">
-                <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                  <div className="max-w-xl">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em]">
-                      <Mail className="h-4 w-4" />
-                      Newsletter
-                    </div>
-                    <h2 className="mt-4 text-3xl font-semibold">
-                      {settings.newsletterSection.title}
-                    </h2>
-                    <p className="mt-2 text-sm leading-6 text-white/70">
-                      {settings.newsletterSection.description}
-                    </p>
-                  </div>
-                  <div className="flex w-full flex-col gap-3 sm:max-w-md sm:flex-row">
-                    <input
-                      className="h-12 flex-1 rounded-full border border-white/15 bg-white px-5 text-sm text-[#111111] outline-none"
-                      placeholder={settings.newsletterSection.placeholder}
-                      type="email"
-                    />
-                    <Button className="h-12 whitespace-nowrap bg-[#ff5a1f] px-6 text-white hover:opacity-90">
-                      {settings.newsletterSection.buttonLabel}
-                    </Button>
                   </div>
                 </div>
               </div>
             ) : null}
-          </div>
+            </div>
 
-          <div className="relative min-w-0">
-            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,_rgba(255,90,31,0.18),_transparent_60%)] blur-3xl" />
-            <HeroSlider products={products} settings={settings.heroSlider} />
+            <div className="relative min-w-0">
+              <HeroSlider products={products} settings={settings.heroSlider} />
+            </div>
           </div>
         </div>
       </section>
+
+      {settings.newsletterSection.enabled ? (
+        <section className="mt-8 rounded-[32px] border border-black/10 bg-white px-5 py-6 shadow-[0_18px_50px_rgba(17,17,17,0.05)] sm:px-8">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-400">
+                Newsletter
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold text-[#111111]">
+                {settings.newsletterSection.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-gray-500">
+                {settings.newsletterSection.description}
+              </p>
+            </div>
+            <div className="flex w-full flex-col gap-3 sm:max-w-md sm:flex-row">
+              <input
+                className="h-12 flex-1 rounded-full border border-black/10 bg-white px-5 text-sm text-[#111111] outline-none"
+                placeholder={settings.newsletterSection.placeholder}
+                type="email"
+              />
+              <Button className="h-12 whitespace-nowrap rounded-full bg-[#111111] px-6 text-white hover:opacity-90">
+                {settings.newsletterSection.buttonLabel}
+              </Button>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {settings.bestSellerSection.enabled ? (
         <section className="mt-14 space-y-6" id="shop">

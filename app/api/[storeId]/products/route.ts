@@ -9,6 +9,7 @@ export async function GET(request: Request) {
   const categoryId = searchParams.get("categoryId");
   const colorId = searchParams.get("colorId");
   const sizeId = searchParams.get("sizeId");
+  const q = searchParams.get("q")?.trim().toLowerCase();
   const includeArchived = searchParams.get("includeArchived") === "true";
   const isFeatured = searchParams.get("isFeatured");
   const useMockData = !process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -32,6 +33,16 @@ export async function GET(request: Request) {
       }
 
       if (sizeId && product.size.id !== sizeId) {
+        return false;
+      }
+
+      if (
+        q &&
+        ![product.name, product.description, product.category.name]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      ) {
         return false;
       }
 
@@ -70,8 +81,15 @@ export async function GET(request: Request) {
     query = query.eq("is_featured", isFeatured === "true");
   }
 
+  if (q) {
+    const escapedQuery = q.replace(/,/g, "\\,");
+    query = query.or(
+      `name.ilike.%${escapedQuery}%,description.ilike.%${escapedQuery}%`
+    );
+  }
+
   if (!includeArchived) {
-    query = query.or("is_archived.is.null,is_archived.eq.false");
+    query = query.not("is_archived", "is", "true");
   }
 
   const { data, error } = await query;

@@ -1,5 +1,6 @@
 import getProducts from "@/actions/get-products";
 import PageHeading from "@/components/admin/page-heading";
+import SalesChart from "@/components/admin/sales-chart";
 import StatCard from "@/components/admin/stat-card";
 import Link from "next/link";
 import {
@@ -39,10 +40,10 @@ const AdminPage = async () => {
             </div>
             <div>
               <h2 className="max-w-3xl text-4xl font-semibold leading-tight sm:text-5xl">
-                Design, merchandise, and manage every customer touchpoint from one dashboard.
+                Manage your store from one dashboard.
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/70 sm:text-base">
-                Update homepage storytelling, launch promos, curate featured products, and keep inventory data sharp without leaving the admin panel.
+              <p className="mt-4 max-w-xl text-sm leading-7 text-white/70 sm:text-base">
+                Update content, products, and store settings quickly.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -50,7 +51,7 @@ const AdminPage = async () => {
                 href="/admin/website"
                 className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#111111]"
               >
-                Open Website Studio
+                Open Nikeshop
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -106,78 +107,22 @@ const AdminPage = async () => {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <div>
         <section className="rounded-[30px] border border-black/10 bg-white p-6 shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.26em] text-gray-400">
-                Growth Snapshot
+                Sales Overview
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-[#111111]">
-                Store momentum
+                Sales trend overview
               </h2>
             </div>
             <div className="rounded-full bg-[#fff3ed] px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#ff5a1f]">
-              Last 8 weeks
+              15 min refresh
             </div>
           </div>
-          <div className="mt-8 flex h-72 items-end gap-4 overflow-hidden rounded-[24px] bg-[#f8f6f1] px-4 pb-4 pt-10">
-            {[38, 44, 56, 48, 72, 84, 66, 92].map((height, index) => (
-              <div key={index} className="flex flex-1 flex-col items-center justify-end gap-3">
-                <div
-                  className="w-full rounded-t-[18px] bg-[linear-gradient(180deg,_#ff5a1f_0%,_#111111_100%)]"
-                  style={{ height: `${height}%` }}
-                />
-                <span className="text-xs font-medium text-gray-400">W{index + 1}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-[30px] border border-black/10 bg-white p-6 shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-gray-400">
-            Quick Actions
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold text-[#111111]">
-            Keep the storefront fresh
-          </h2>
-          <div className="mt-6 space-y-3">
-            {[
-              {
-                href: "/admin/website",
-                title: "Edit homepage sections",
-                description: "Update promo copy, slider text, and curated content blocks.",
-              },
-              {
-                href: "/admin/products",
-                title: "Review featured products",
-                description: "Control the products powering best sellers, arrivals, and flash sale.",
-              },
-              {
-                href: "/admin/categories",
-                title: "Tune category navigation",
-                description: "Shape the storefront browsing experience with a clean structure.",
-              },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block rounded-[24px] border border-black/10 p-4 transition hover:border-black/20 hover:bg-[#faf9f6]"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-base font-semibold text-[#111111]">
-                      {item.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-6 text-gray-500">
-                      {item.description}
-                    </p>
-                  </div>
-                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-gray-400" />
-                </div>
-              </Link>
-            ))}
-          </div>
+          <SalesChart initialProducts={products} />
         </section>
       </div>
     </div>

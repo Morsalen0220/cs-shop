@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useMemo } from "react";
 import { Expand, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -21,9 +21,10 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
   const cart = useCart();
   const router = useRouter();
   const imageUrl = data.images?.[0]?.url || "/images/image-1.jpg";
+  const productHref = useMemo(() => `/product/${data?.id}`, [data?.id]);
 
   const handleClick = () => {
-    router.push(`/product/${data?.id}`);
+    router.push(productHref);
   };
 
   const onPreview: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -38,9 +39,15 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
     cart.addItem(data);
   };
 
+  const handlePrefetch = () => {
+    router.prefetch(productHref);
+  };
+
   return (
     <div
       onClick={handleClick}
+      onFocus={handlePrefetch}
+      onMouseEnter={handlePrefetch}
       className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4"
     >
       {/* Image & actions */}

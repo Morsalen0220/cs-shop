@@ -9,11 +9,22 @@ import { useState } from "react";
 import Filter from "./filter";
 
 interface MobileFiltersProps {
-  sizes: Size[];
   colors: Color[];
+  onColorChange?: (value: string | null) => void;
+  onSizeChange?: (value: string | null) => void;
+  selectedColorId?: string | null;
+  selectedSizeId?: string | null;
+  sizes: Size[];
 }
 
-const MobileFilters: React.FC<MobileFiltersProps> = ({ sizes, colors }) => {
+const MobileFilters: React.FC<MobileFiltersProps> = ({
+  sizes,
+  colors,
+  onColorChange,
+  onSizeChange,
+  selectedColorId,
+  selectedSizeId,
+}) => {
   const [open, setOpen] = useState(false);
 
   const onOpen = () => setOpen(true);
@@ -50,8 +61,30 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({ sizes, colors }) => {
                   Narrow down by size and color
                 </p>
               </div>
-              <Filter valueKey="sizeId" name="Sizes" data={sizes} />
-              <Filter valueKey="colorId" name="Colors" data={colors} />
+              <Filter
+                data={sizes}
+                name="Sizes"
+                onValueChange={(value) => {
+                  onSizeChange?.(value);
+                  if (onSizeChange) {
+                    onClose();
+                  }
+                }}
+                selectedValue={selectedSizeId}
+                valueKey="sizeId"
+              />
+              <Filter
+                data={colors}
+                name="Colors"
+                onValueChange={(value) => {
+                  onColorChange?.(value);
+                  if (onColorChange) {
+                    onClose();
+                  }
+                }}
+                selectedValue={selectedColorId}
+                valueKey="colorId"
+              />
             </div>
           </Dialog.Panel>
         </div>

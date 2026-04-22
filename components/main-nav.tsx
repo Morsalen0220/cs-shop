@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { Category, HeaderMenuItem } from "@/types";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 interface MainNavProps {
   data: Category[];
@@ -15,6 +15,7 @@ interface MainNavProps {
 
 const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
   const pathName = usePathname();
+  const router = useRouter();
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   const categoryRoutes = useMemo(
@@ -41,6 +42,27 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
 
     return pathName === basePath;
   };
+
+  const prefetchRoute = (href: string) => {
+    const route = href.split("#")[0];
+
+    if (route && route.startsWith("/")) {
+      router.prefetch(route);
+    }
+  };
+
+  useEffect(() => {
+    const routes = [
+      ...menuItems
+        .filter((item) => item.type === "link")
+        .map((item) => item.href.split("#")[0]),
+      ...categoryRoutes.map((route) => route.href),
+    ];
+
+    Array.from(new Set(routes))
+      .filter((route) => route.startsWith("/") && route !== pathName)
+      .forEach((route) => router.prefetch(route));
+  }, [categoryRoutes, menuItems, pathName, router]);
 
   return (
     <nav
@@ -89,6 +111,7 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
                       <Link
                         key={route.label}
                         href={route.href}
+                        prefetch
                         className={cn(
                           "block rounded-[20px] px-4 py-3 transition-colors",
                           route.active
@@ -96,6 +119,7 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
                             : "text-[#111111] hover:bg-[#f7f4ef]"
                         )}
                         onClick={() => setIsCategoryOpen(false)}
+                        onMouseEnter={() => prefetchRoute(route.href)}
                       >
                         <p className="text-sm font-semibold">{route.label}</p>
                         <p
@@ -121,12 +145,14 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
           <Link
             key={item.id}
             href={item.href}
+            prefetch
             className={cn(
               "inline-block rounded-full px-4 py-2 text-center text-sm font-medium transition-colors",
               isActive
                 ? "bg-[#111111] text-white shadow-[0_10px_20px_rgba(17,17,17,0.16)]"
                 : "text-neutral-500 hover:bg-black/5 hover:text-black"
             )}
+            onMouseEnter={() => prefetchRoute(item.href)}
           >
             {item.label}
           </Link>
