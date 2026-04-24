@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  BRAND_OPTIONS,
+  inferBrandFromProduct,
+  normalizeCategories,
+  normalizeCategoryLabel,
+} from "@/lib/catalog";
 import NoResults from "@/components/ui/no-results";
 import { Formatter } from "@/components/ui/currency";
 import IconButton from "@/components/ui/icon-button";
@@ -31,8 +37,6 @@ interface SaleExperienceProps {
 }
 
 const discountOptions = [10, 20, 30, 40, 50];
-const brandOptions = ["Nike", "Adidas", "Puma", "New Balance", "Reebok", "Vans", "Asics"];
-
 const sortOptions = [
   { value: "featured", label: "Featured" },
   { value: "discount-desc", label: "Biggest Discount" },
@@ -158,6 +162,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
   products,
   sizes,
 }) => {
+  const normalizedCategories = useMemo(() => normalizeCategories(categories), [categories]);
   const [settings, setSettings] = useState<HomeSettings>(defaultHomeSettings);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedColorId, setSelectedColorId] = useState("");
@@ -230,7 +235,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
         return false;
       }
 
-      if (selectedBrand && !product.name.toLowerCase().includes(selectedBrand.toLowerCase())) {
+      if (selectedBrand && inferBrandFromProduct(product) !== selectedBrand) {
         return false;
       }
 
@@ -246,7 +251,12 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
         return true;
       }
 
-      return [product.name, product.description, product.category.name]
+      return [
+        product.name,
+        product.description,
+        normalizeCategoryLabel(product.category),
+        inferBrandFromProduct(product),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(normalizedSearch);
@@ -300,7 +310,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
 
   const categoryTiles = [
     { id: "", label: "All Sale", product: saleProducts[0]?.product },
-    ...categories.map((category) => ({
+    ...normalizedCategories.map((category) => ({
       id: category.id,
       label: category.name,
       product: saleProducts.find(({ product }) => product.category.id === category.id)?.product,
@@ -429,7 +439,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
               Category
             </p>
             <div className="mt-4 space-y-2">
-              {categories.map((category) => (
+              {normalizedCategories.map((category) => (
                 <label className="flex items-center justify-between text-sm text-gray-600" key={category.id}>
                   <span className="flex items-center gap-2">
                     <input
@@ -544,7 +554,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
               Brand
             </p>
             <div className="mt-4 space-y-2">
-              {brandOptions.map((brand) => (
+              {BRAND_OPTIONS.map((brand) => (
                 <label className="flex items-center gap-2 text-sm text-gray-600" key={brand}>
                   <input
                     checked={selectedBrand === brand}

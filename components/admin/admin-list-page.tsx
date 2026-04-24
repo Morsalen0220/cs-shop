@@ -4,7 +4,7 @@ import AdminTable from "@/components/admin/admin-table";
 import PageHeading from "@/components/admin/page-heading";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 type AdminListPageProps = {
   addHref?: string;
@@ -14,6 +14,26 @@ type AdminListPageProps = {
   title: string;
   onEdit?: (rowIndex: number) => void;
   onDelete?: (rowIndex: number) => void;
+};
+
+const getSearchableText = (node: React.ReactNode): string => {
+  if (node == null || typeof node === "boolean") {
+    return "";
+  }
+
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(getSearchableText).join(" ");
+  }
+
+  if (typeof node === "object" && "props" in node) {
+    return getSearchableText(node.props?.children);
+  }
+
+  return "";
 };
 
 const AdminListPage: React.FC<AdminListPageProps> = ({
@@ -30,6 +50,7 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
     rowsAreAsync ? [] : rows
   );
   const [loading, setLoading] = useState(rowsAreAsync);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (!rowsAreAsync) {
@@ -52,6 +73,18 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
     fetchRows();
   }, [rows, rowsAreAsync]);
 
+  const filteredRows = useMemo(() => {
+    const normalizedQuery = searchTerm.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return tableRows;
+    }
+
+    return tableRows.filter((row) =>
+      row.some((cell) => getSearchableText(cell).toLowerCase().includes(normalizedQuery))
+    );
+  }, [searchTerm, tableRows]);
+
   return (
     <div className="space-y-8">
       <PageHeading
@@ -72,6 +105,8 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
       <input
         className="h-10 w-full max-w-sm rounded-md border px-3 text-sm outline-none focus:ring-2 focus:ring-gray-300"
         placeholder="Search"
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
       />
       {loading ? (
         <div className="flex justify-center py-8">
@@ -80,7 +115,7 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
       ) : (
         <AdminTable
           columns={columns}
-          rows={tableRows}
+          rows={filteredRows}
           onEdit={onEdit}
           onDelete={onDelete}
         />

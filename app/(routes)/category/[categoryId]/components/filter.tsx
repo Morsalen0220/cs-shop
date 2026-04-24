@@ -7,8 +7,13 @@ import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Color, Size } from "@/types";
 
+type FilterItem = {
+  id: string;
+  name: string;
+};
+
 interface FilterProps {
-  data: (Size | Color)[];
+  data: (Size | Color | FilterItem)[];
   name: string;
   onValueChange?: (value: string | null) => void;
   selectedValue?: string | null;

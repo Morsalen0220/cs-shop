@@ -9,6 +9,7 @@ export const revalidate = 0;
 
 interface ShopPageProps {
   searchParams: {
+    brand?: string;
     categoryId?: string;
     colorId?: string;
     sizeId?: string;
@@ -56,6 +57,7 @@ const ShopPage: React.FC<ShopPageProps> = async ({ searchParams }) => {
             <ShopProductBrowser
               categories={categories}
               colors={colors}
+              initialBrand={searchParams.brand}
               initialCategoryId={searchParams.categoryId}
               initialColorId={searchParams.colorId}
               initialSearch={searchParams.q}

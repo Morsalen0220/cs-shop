@@ -26,10 +26,10 @@ const contactCards = [
 
 const ContactPage = () => {
   return (
-    <div className="bg-[linear-gradient(180deg,_#f8f5f1_0%,_#ffffff_34%)]">
+    <div className="contact-page bg-[linear-gradient(180deg,_#f8f5f1_0%,_#ffffff_34%)]">
       <Container>
         <div className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-          <section className="overflow-hidden rounded-[36px] border border-black/10 bg-[linear-gradient(135deg,_#fff7f1_0%,_#ffffff_44%,_#eef3ff_100%)] p-6 shadow-[0_24px_70px_rgba(17,17,17,0.08)] sm:p-8 lg:p-10">
+          <section className="contact-hero overflow-hidden rounded-[36px] border border-black/10 bg-[linear-gradient(135deg,_#fff7f1_0%,_#ffffff_44%,_#eef3ff_100%)] p-6 shadow-[0_24px_70px_rgba(17,17,17,0.08)] sm:p-8 lg:p-10">
             <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-gray-400">
@@ -50,7 +50,7 @@ const ContactPage = () => {
                     return (
                       <div
                         key={item.title}
-                        className="rounded-[24px] border border-black/10 bg-white p-4 shadow-[0_14px_35px_rgba(17,17,17,0.05)]"
+                        className="contact-surface rounded-[24px] border border-black/10 bg-white p-4 shadow-[0_14px_35px_rgba(17,17,17,0.05)]"
                       >
                         <div className="inline-flex rounded-2xl bg-[#fff2e8] p-3 text-[#ff5a1f]">
                           <Icon className="h-5 w-5" />
@@ -67,7 +67,7 @@ const ContactPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-[32px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
+              <div className="contact-surface rounded-[32px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gray-400">
                   Send a message
                 </p>

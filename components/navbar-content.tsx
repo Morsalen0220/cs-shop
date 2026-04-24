@@ -1,13 +1,14 @@
 "use client";
 
+import { normalizeCategories } from "@/lib/catalog";
 import MainNav from "@/components/main-nav";
 import NavbarActions from "@/components/navbar-actions";
-import NavbarPromoPill from "@/components/navbar-promo-pill";
 import { defaultHomeSettings, readHomeSettings } from "@/lib/home-settings";
 import { Category, HomeSettings } from "@/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 interface NavbarContentProps {
   categories: Category[];
@@ -18,6 +19,8 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
   const pathname = usePathname();
   const router = useRouter();
   const isShopPage = pathname.startsWith("/shop");
+  const normalizedCategories = normalizeCategories(categories);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const syncSettings = () => setSettings(readHomeSettings());
@@ -50,23 +53,28 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
       ...settings.header.menuItems
         .filter((item) => item.type === "link")
         .map((item) => item.href.split("#")[0]),
-      ...categories.map((category) => `/category/${category.id}`),
+      ...normalizedCategories.map((category) => `/category/${category.id}`),
     ];
 
     Array.from(new Set(routes))
       .filter((route) => route.startsWith("/") && route !== pathname)
       .forEach((route) => router.prefetch(route));
-  }, [categories, pathname, router, settings.header.menuItems]);
+  }, [normalizedCategories, pathname, router, settings.header.menuItems]);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <div
+      data-navbar-content
       className={`relative px-3 sm:px-6 lg:px-8 ${
-        isShopPage ? "py-2" : "py-3"
+        isShopPage ? "py-1.5" : "py-2"
       }`}
     >
       <div
         className={`flex items-center gap-3 ${
-          isShopPage ? "min-h-[60px]" : "min-h-[72px]"
+          isShopPage ? "min-h-[48px] md:min-h-[56px]" : "min-h-[52px] md:min-h-[60px]"
         }`}
       >
         <Link
@@ -77,18 +85,18 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
           onMouseEnter={() => prefetchRoute("/")}
         >
           <div
-            className={`flex items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition group-hover:scale-105 ${
+            className={`navbar-brand-chip flex items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition group-hover:scale-105 ${
               isShopPage
-                ? "h-[40px] w-[40px] md:h-[48px] md:w-[48px]"
-                : "h-[44px] w-[44px] md:h-[56px] md:w-[56px]"
+                ? "h-[32px] w-[32px] md:h-[42px] md:w-[42px]"
+                : "h-[34px] w-[34px] md:h-[46px] md:w-[46px]"
             }`}
           >
             <svg
               aria-hidden="true"
               className={`transition-transform group-hover:scale-110 ${
                 isShopPage
-                  ? "h-[22px] w-[22px] md:h-[26px] md:w-[26px]"
-                  : "h-[24px] w-[24px] md:h-[30px] md:w-[30px]"
+                  ? "h-[16px] w-[16px] md:h-[23px] md:w-[23px]"
+                  : "h-[17px] w-[17px] md:h-[25px] md:w-[25px]"
               }`}
               fill="none"
               focusable="false"
@@ -105,13 +113,13 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
               ></path>
             </svg>
           </div>
-          <div className="sm:block">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-500">
+          <div className="min-w-0 max-w-[120px] sm:block md:max-w-none">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-500 md:text-[10px] md:tracking-[0.24em]">
               {settings.header.brandLabel}
             </p>
             <p
-              className={`font-semibold leading-tight text-[#111111] ${
-                isShopPage ? "text-sm sm:text-base" : "text-base sm:text-lg"
+              className={`truncate font-semibold leading-tight text-[#111111] ${
+                isShopPage ? "text-[11px] sm:text-[15px]" : "text-[12px] sm:text-base"
               }`}
             >
               {settings.header.tagline}
@@ -119,48 +127,72 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
           </div>
         </Link>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <NavbarPromoPill />
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
+          <button
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            className="navbar-action-btn inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white lg:hidden"
+            onClick={() => setMobileMenuOpen((current) => !current)}
+            type="button"
+          >
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
           <NavbarActions />
         </div>
       </div>
 
-      <div className={`${isShopPage ? "mt-2" : "mt-3"} hidden lg:flex`}>
+      <div className={`${isShopPage ? "mt-2" : "mt-2.5"} hidden lg:flex`}>
         <MainNav
-          className={`w-full justify-center ${isShopPage ? "px-3 py-2" : "px-3 py-3"}`}
+          className={`navbar-menu-shell w-full justify-center ${isShopPage ? "px-2 py-1.5" : "px-2 py-1.5"}`}
           data={categories}
           menuItems={settings.header.menuItems}
         />
       </div>
 
-      <div className={`${isShopPage ? "mt-2" : "mt-3"} space-y-2 lg:hidden`}>
-        <div className="flex items-center gap-2 overflow-auto whitespace-nowrap">
-          {mobilePrimaryLinks.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              prefetch
-              className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[#111111]"
-              onMouseEnter={() => prefetchRoute(item.href)}
-            >
-              {item.label}
-            </Link>
-          ))}
+      {mobileMenuOpen ? (
+        <div className={`${isShopPage ? "mt-2" : "mt-2.5"} lg:hidden`}>
+          <div className="navbar-mobile-panel overflow-hidden rounded-[24px] border border-black/8 bg-white shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
+            <div className="border-b border-black/8 px-4 py-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-500">
+                Menu
+              </p>
+            </div>
+            <div className="space-y-5 p-4">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {mobilePrimaryLinks.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    prefetch
+                    className="rounded-[16px] border border-black/10 bg-[#faf7f3] px-4 py-3 text-center text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                    onMouseEnter={() => prefetchRoute(item.href)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+
+              <div>
+                <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-500">
+                  Categories
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {normalizedCategories.map((category) => (
+                    <Link
+                      key={category.id}
+                      href={`/category/${category.id}`}
+                      prefetch
+                      className="rounded-full bg-[#f6f1eb] px-4 py-2 text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                      onMouseEnter={() => prefetchRoute(`/category/${category.id}`)}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 overflow-auto whitespace-nowrap">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/category/${category.id}`}
-              prefetch
-              className="rounded-full bg-[#f6f1eb] px-4 py-2 text-sm font-medium text-gray-700"
-              onMouseEnter={() => prefetchRoute(`/category/${category.id}`)}
-            >
-              {category.name}
-            </Link>
-          ))}
-        </div>
-      </div>
+      ) : null}
     </div>
   );
 };

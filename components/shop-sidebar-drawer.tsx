@@ -1,6 +1,7 @@
 "use client";
 
 import Filter from "@/app/(routes)/category/[categoryId]/components/filter";
+import { BRAND_FILTER_ITEMS, normalizeCategories } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 import { Category, Color, Size } from "@/types";
 import { ChevronLeft, ChevronRight, SlidersHorizontal, X } from "lucide-react";
@@ -9,9 +10,11 @@ import { useState } from "react";
 interface ShopSidebarDrawerProps {
   categories: Category[];
   colors: Color[];
+  onBrandChange?: (value: string | null) => void;
   onCategoryChange: (value: string | null) => void;
   onColorChange: (value: string | null) => void;
   onSizeChange: (value: string | null) => void;
+  selectedBrand?: string | null;
   selectedCategoryId?: string | null;
   selectedColorId?: string | null;
   selectedSizeId?: string | null;
@@ -21,15 +24,18 @@ interface ShopSidebarDrawerProps {
 const ShopSidebarDrawer: React.FC<ShopSidebarDrawerProps> = ({
   categories,
   colors,
+  onBrandChange,
   onCategoryChange,
   onColorChange,
   onSizeChange,
+  selectedBrand,
   selectedCategoryId,
   selectedColorId,
   selectedSizeId,
   sizes,
 }) => {
   const [open, setOpen] = useState(false);
+  const normalizedCategories = normalizeCategories(categories);
 
   return (
     <>
@@ -116,7 +122,7 @@ const ShopSidebarDrawer: React.FC<ShopSidebarDrawerProps> = ({
                   </p>
                 </button>
 
-                {categories.map((item) => {
+                {normalizedCategories.map((item) => {
                   const isActive = item.id === selectedCategoryId;
 
                   return (
@@ -150,6 +156,13 @@ const ShopSidebarDrawer: React.FC<ShopSidebarDrawerProps> = ({
             </div>
 
             <div className="rounded-[30px] border border-black/10 bg-white p-5 shadow-[0_18px_60px_rgba(17,17,17,0.05)]">
+              <Filter
+                data={BRAND_FILTER_ITEMS}
+                name="Brand"
+                onValueChange={onBrandChange}
+                selectedValue={selectedBrand}
+                valueKey="brand"
+              />
               <Filter
                 data={sizes}
                 name="Sizes"

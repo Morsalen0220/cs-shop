@@ -30,6 +30,7 @@ export interface Color {
 export interface Product {
   id: string;
   category: Category;
+  brand?: string;
   description: string;
   isArchived?: boolean;
   isFeatured?: boolean;
@@ -105,6 +106,14 @@ export interface NewsletterSectionSettings {
   description: string;
   placeholder: string;
   buttonLabel: string;
+}
+
+export interface FooterSettings {
+  brandLabel: string;
+  description: string;
+  copyrightText: string;
+  showCredit: boolean;
+  links: HeaderMenuItem[];
 }
 
 export interface ProductSectionSettings {
@@ -221,6 +230,7 @@ export interface HomeSettings {
   promoSection: PromoSectionSettings;
   heroSlider: HeroSliderSettings;
   newsletterSection: NewsletterSectionSettings;
+  footer: FooterSettings;
   bestSellerSection: ProductSectionSettings;
   newArrivalsHero: CollectionHeroSettings;
   newArrivalsSection: ProductSectionSettings;

@@ -2,6 +2,7 @@
 
 import Button from "@/components/ui/button";
 import IconButton from "@/components/ui/icon-button";
+import { BRAND_FILTER_ITEMS } from "@/lib/catalog";
 import { Color, Size } from "@/types";
 import { Dialog } from "@headlessui/react";
 import { Plus, X } from "lucide-react";
@@ -9,6 +10,8 @@ import { useState } from "react";
 import Filter from "./filter";
 
 interface MobileFiltersProps {
+  onBrandChange?: (value: string | null) => void;
+  selectedBrand?: string | null;
   colors: Color[];
   onColorChange?: (value: string | null) => void;
   onSizeChange?: (value: string | null) => void;
@@ -20,6 +23,8 @@ interface MobileFiltersProps {
 const MobileFilters: React.FC<MobileFiltersProps> = ({
   sizes,
   colors,
+  onBrandChange,
+  selectedBrand,
   onColorChange,
   onSizeChange,
   selectedColorId,
@@ -58,7 +63,7 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
               <div className="mb-5">
                 <p className="text-lg font-semibold text-[#111111]">Filters</p>
                 <p className="text-sm text-gray-500">
-                  Narrow down by size and color
+                  Narrow down by size, color and brand
                 </p>
               </div>
               <Filter
@@ -72,6 +77,18 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
                 }}
                 selectedValue={selectedSizeId}
                 valueKey="sizeId"
+              />
+              <Filter
+                data={BRAND_FILTER_ITEMS}
+                name="Brand"
+                onValueChange={(value) => {
+                  onBrandChange?.(value);
+                  if (onBrandChange) {
+                    onClose();
+                  }
+                }}
+                selectedValue={selectedBrand}
+                valueKey="brand"
               />
               <Filter
                 data={colors}

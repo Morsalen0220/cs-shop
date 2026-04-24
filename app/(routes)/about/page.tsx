@@ -25,10 +25,10 @@ const values = [
 
 const AboutPage = () => {
   return (
-    <div className="bg-[linear-gradient(180deg,_#f8f5f1_0%,_#ffffff_34%)]">
+    <div className="about-page bg-[linear-gradient(180deg,_#f8f5f1_0%,_#ffffff_34%)]">
       <Container>
         <div className="px-4 pb-24 pt-8 sm:px-6 lg:px-8">
-          <section className="overflow-hidden rounded-[36px] border border-black/10 bg-[linear-gradient(135deg,_#111111_0%,_#1b1b1b_48%,_#f8eee6_48%,_#fff8f3_100%)] p-6 shadow-[0_24px_70px_rgba(17,17,17,0.08)] sm:p-8 lg:p-10">
+          <section className="about-hero overflow-hidden rounded-[36px] border border-black/10 bg-[linear-gradient(135deg,_#111111_0%,_#1b1b1b_48%,_#f8eee6_48%,_#fff8f3_100%)] p-6 shadow-[0_24px_70px_rgba(17,17,17,0.08)] sm:p-8 lg:p-10">
             <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
               <div className="max-w-2xl">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/55">
@@ -65,7 +65,7 @@ const AboutPage = () => {
               return (
                 <div
                   key={item.title}
-                  className="rounded-[30px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)]"
+                  className="about-surface rounded-[30px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)]"
                 >
                   <div className="inline-flex rounded-2xl bg-[#fff2e8] p-3 text-[#ff5a1f]">
                     <Icon className="h-5 w-5" />
@@ -82,7 +82,7 @@ const AboutPage = () => {
           </section>
 
           <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-            <div className="rounded-[32px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
+            <div className="about-surface rounded-[32px] border border-black/10 bg-white p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
               <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gray-400">
                 Our approach
               </p>
@@ -106,7 +106,7 @@ const AboutPage = () => {
               </div>
             </div>
 
-            <div className="rounded-[32px] border border-black/10 bg-[linear-gradient(180deg,_#fff8f2_0%,_#fff1e7_100%)] p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
+            <div className="about-surface rounded-[32px] border border-black/10 bg-[linear-gradient(180deg,_#fff8f2_0%,_#fff1e7_100%)] p-6 shadow-[0_18px_60px_rgba(17,17,17,0.05)] sm:p-8">
               <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gray-400">
                 Next step
               </p>

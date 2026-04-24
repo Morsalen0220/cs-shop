@@ -4,6 +4,7 @@ import getProducts from "@/actions/get-products";
 import getSizes from "@/actions/get-sizes";
 import { Billboard } from "@/components/billboard";
 import Container from "@/components/ui/container";
+import { BRAND_FILTER_ITEMS, inferBrandFromProduct } from "@/lib/catalog";
 import Filter from "./components/filter";
 import NoResults from "@/components/ui/no-results";
 import ProductCard from "@/components/ui/product-card";
@@ -16,6 +17,7 @@ interface CategoryPageProps {
     categoryId: string;
   };
   searchParams: {
+    brand?: string;
     colorId: string;
     sizeId: string;
   };
@@ -33,6 +35,11 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
   const sizes = await getSizes();
   const colors = await getColors();
   const category = await getCategory(params.categoryId);
+  const filteredProducts = searchParams.brand
+    ? products.filter(
+        (product) => inferBrandFromProduct(product) === searchParams.brand
+      )
+    : products;
 
   if (!category) {
     return (
@@ -52,15 +59,27 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({
         <Billboard data={category.billboard} />
         <div className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-5 lg:gap-x-8">
-            <MobileFilters sizes={sizes} colors={colors} />
+            <MobileFilters
+              colors={colors}
+              selectedBrand={searchParams.brand}
+              selectedColorId={searchParams.colorId}
+              selectedSizeId={searchParams.sizeId}
+              sizes={sizes}
+            />
             <div className="hidden lg:block">
+              <Filter
+                data={BRAND_FILTER_ITEMS}
+                name="Brand"
+                selectedValue={searchParams.brand}
+                valueKey="brand"
+              />
               <Filter valueKey="sizeId" name="Sizes" data={sizes} />
               <Filter valueKey="colorId" name="Colors" data={colors} />
             </div>
             <div className="mt-6 lg:col-span-4 lg:mt-0">
-              {products.length === 0 && <NoResults />}
+              {filteredProducts.length === 0 && <NoResults />}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-                {products.map((item) => (
+                {filteredProducts.map((item) => (
                   <ProductCard key={item.id} data={item} />
                 ))}
               </div>

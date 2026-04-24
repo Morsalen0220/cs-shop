@@ -111,9 +111,9 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
   }
 
   return (
-    <div className="bg-[linear-gradient(180deg,_#f8f4ee_0%,_#fdfbf8_34%,_#ffffff_100%)]">
+    <div className="blog-page bg-[linear-gradient(180deg,_#f8f4ee_0%,_#fdfbf8_34%,_#ffffff_100%)]">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <section className="overflow-hidden rounded-[38px] border border-black/8 bg-[radial-gradient(circle_at_left,_rgba(198,141,101,0.10),_transparent_28%),linear-gradient(135deg,_#ffffff_0%,_#fff9f3_52%,_#f7f1ea_100%)] p-6 shadow-[0_26px_80px_rgba(17,17,17,0.06)] sm:p-8">
+        <section className="blog-hero overflow-hidden rounded-[38px] border border-black/8 bg-[radial-gradient(circle_at_left,_rgba(198,141,101,0.10),_transparent_28%),linear-gradient(135deg,_#ffffff_0%,_#fff9f3_52%,_#f7f1ea_100%)] p-6 shadow-[0_26px_80px_rgba(17,17,17,0.06)] sm:p-8">
           <div className="grid gap-8 xl:grid-cols-[0.92fr_1.08fr] xl:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#b67b55]">
@@ -153,7 +153,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
           </div>
         </section>
 
-        <section className="mt-6 rounded-[32px] border border-black/8 bg-white/90 p-5 shadow-[0_20px_55px_rgba(17,17,17,0.05)] backdrop-blur">
+        <section className="blog-surface mt-6 rounded-[32px] border border-black/8 bg-white/90 p-5 shadow-[0_20px_55px_rgba(17,17,17,0.05)] backdrop-blur">
           <div className="flex gap-4 overflow-auto pb-1">
             {categoryTiles.map((category, index) => (
               <div
@@ -202,7 +202,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
             <div className="grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
               {primaryArticle ? (
                 <Link
-                  className="overflow-hidden rounded-[30px] border border-black/10 bg-white shadow-[0_20px_60px_rgba(17,17,17,0.06)]"
+                  className="blog-surface overflow-hidden rounded-[30px] border border-black/10 bg-white shadow-[0_20px_60px_rgba(17,17,17,0.06)]"
                   href={`/blog/${primaryArticle.slug}`}
                 >
                   <div className="relative aspect-[1.04] bg-[#efe5db]">
@@ -234,7 +234,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
               <div className="space-y-5">
                 {secondaryArticles.map((article) => (
                   <Link
-                    className="block overflow-hidden rounded-[28px] border border-black/10 bg-white shadow-[0_18px_45px_rgba(17,17,17,0.06)]"
+                    className="blog-surface block overflow-hidden rounded-[28px] border border-black/10 bg-white shadow-[0_18px_45px_rgba(17,17,17,0.06)]"
                     href={`/blog/${article.slug}`}
                     key={article.id}
                   >
@@ -263,7 +263,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
               <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {explorePosts.map((article) => (
                   <Link
-                    className="overflow-hidden rounded-[26px] border border-black/8 bg-white shadow-[0_14px_40px_rgba(17,17,17,0.05)]"
+                    className="blog-surface overflow-hidden rounded-[26px] border border-black/8 bg-white shadow-[0_14px_40px_rgba(17,17,17,0.05)]"
                     href={`/blog/${article.slug}`}
                     key={article.id}
                   >
@@ -293,7 +293,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
           </div>
 
           <aside className="space-y-5">
-            <div className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
+            <div className="blog-surface rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
               <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
@@ -308,7 +308,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
                 <div className="mt-4 space-y-3">
                   {trendingPosts.map((article, index) => (
                     <Link
-                      className="flex items-center gap-3 rounded-[24px] border border-black/8 bg-white px-3 py-3"
+                      className="blog-surface flex items-center gap-3 rounded-[24px] border border-black/8 bg-white px-3 py-3"
                       href={`/blog/${article.slug}`}
                       key={article.id}
                     >
@@ -332,7 +332,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[30px] border border-black/8 bg-[linear-gradient(135deg,_#fffdfb_0%,_#faf3ea_100%)] shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
+            <div className="blog-newsletter overflow-hidden rounded-[30px] border border-black/8 bg-[linear-gradient(135deg,_#fffdfb_0%,_#faf3ea_100%)] shadow-[0_18px_50px_rgba(17,17,17,0.05)]">
               <div className="relative h-44 bg-[#f4eadf]">
                 <Image
                   alt={blog.newsletter.title}
@@ -361,7 +361,7 @@ const BlogExperience: React.FC<BlogExperienceProps> = ({
           </aside>
         </section>
 
-        <section className="mt-6 rounded-[32px] border border-black/8 bg-white px-5 py-6 shadow-[0_18px_50px_rgba(17,17,17,0.04)] sm:px-6">
+        <section className="blog-surface mt-6 rounded-[32px] border border-black/8 bg-white px-5 py-6 shadow-[0_18px_50px_rgba(17,17,17,0.04)] sm:px-6">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {blog.promises.map((item, index) => {
               const Icon = iconMap[index] ?? Truck;

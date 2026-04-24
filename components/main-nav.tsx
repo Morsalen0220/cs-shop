@@ -1,5 +1,6 @@
 "use client";
 
+import { normalizeCategories } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 import { Category, HeaderMenuItem } from "@/types";
 import { ChevronDown } from "lucide-react";
@@ -17,16 +18,17 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
   const pathName = usePathname();
   const router = useRouter();
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const normalizedCategories = useMemo(() => normalizeCategories(data), [data]);
 
   const categoryRoutes = useMemo(
     () =>
-      data.map((route) => ({
+      normalizedCategories.map((route) => ({
         href: `/category/${route.id}`,
         label: route.name,
         description: route.billboard?.label || "Explore the latest edit",
         active: pathName === `/category/${route.id}`,
       })),
-    [data, pathName]
+    [normalizedCategories, pathName]
   );
 
   const resolveActiveState = (href: string) => {
@@ -67,7 +69,7 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
   return (
     <nav
       className={cn(
-        "hidden items-center gap-1 rounded-full border border-black/10 bg-white/90 px-2 py-2 shadow-[0_10px_30px_rgba(17,17,17,0.06)] lg:flex",
+        "navbar-menu-shell hidden items-center gap-1 rounded-full border border-black/10 bg-white/90 px-2 py-1.5 shadow-[0_10px_30px_rgba(17,17,17,0.06)] lg:flex",
         className
       )}
     >
@@ -83,7 +85,7 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
               <button
                 type="button"
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                  "navbar-menu-item inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium transition-colors",
                   categoryRoutes.some((route) => route.active)
                     ? "bg-[#111111] text-white shadow-[0_10px_20px_rgba(17,17,17,0.16)]"
                     : "text-neutral-500 hover:bg-black/5 hover:text-black"
@@ -100,40 +102,43 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
               </button>
 
               {isCategoryOpen ? (
-                <div className="absolute left-0 top-[calc(100%+12px)] w-[320px] rounded-[28px] border border-black/10 bg-white p-3 shadow-[0_26px_70px_rgba(17,17,17,0.14)]">
-                  <div className="mb-2 px-3 pt-2">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-400">
-                      Shop by category
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    {categoryRoutes.map((route) => (
-                      <Link
-                        key={route.label}
-                        href={route.href}
-                        prefetch
-                        className={cn(
-                          "block rounded-[20px] px-4 py-3 transition-colors",
-                          route.active
-                            ? "bg-[#111111] text-white"
-                            : "text-[#111111] hover:bg-[#f7f4ef]"
-                        )}
-                        onClick={() => setIsCategoryOpen(false)}
-                        onMouseEnter={() => prefetchRoute(route.href)}
-                      >
-                        <p className="text-sm font-semibold">{route.label}</p>
-                        <p
+                <>
+                  <div className="absolute left-0 top-full h-3 w-full" />
+                  <div className="navbar-dropdown absolute left-0 top-[calc(100%+12px)] w-[320px] rounded-[28px] border border-black/10 bg-white p-3 shadow-[0_26px_70px_rgba(17,17,17,0.14)]">
+                    <div className="mb-2 px-3 pt-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-400">
+                        Shop by category
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      {categoryRoutes.map((route) => (
+                        <Link
+                          key={route.label}
+                          href={route.href}
+                          prefetch
                           className={cn(
-                            "mt-1 text-xs",
-                            route.active ? "text-white/65" : "text-gray-500"
+                            "block rounded-[20px] px-4 py-3 transition-colors",
+                            route.active
+                              ? "bg-[#111111] text-white"
+                              : "text-[#111111] hover:bg-[#f7f4ef]"
                           )}
+                          onClick={() => setIsCategoryOpen(false)}
+                          onMouseEnter={() => prefetchRoute(route.href)}
                         >
-                          {route.description}
-                        </p>
-                      </Link>
-                    ))}
+                          <p className="text-sm font-semibold">{route.label}</p>
+                          <p
+                            className={cn(
+                              "mt-1 text-xs",
+                              route.active ? "text-white/65" : "text-gray-500"
+                            )}
+                          >
+                            {route.description}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </>
               ) : null}
             </div>
           );
@@ -147,7 +152,7 @@ const MainNav: React.FC<MainNavProps> = ({ data, className, menuItems }) => {
             href={item.href}
             prefetch
             className={cn(
-              "inline-block rounded-full px-4 py-2 text-center text-sm font-medium transition-colors",
+              "navbar-menu-item inline-block rounded-full px-4 py-2 text-center text-[13px] font-medium transition-colors",
               isActive
                 ? "bg-[#111111] text-white shadow-[0_10px_20px_rgba(17,17,17,0.16)]"
                 : "text-neutral-500 hover:bg-black/5 hover:text-black"

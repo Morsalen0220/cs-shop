@@ -15,7 +15,7 @@ const HomePage = async () => {
 
   return (
     <Container>
-      <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <div className="px-2 py-4 sm:px-6 lg:px-8 lg:py-8">
         <HomeExperience
           heroFontClassName={FuturaCondensedExtraBold.className}
           products={products}

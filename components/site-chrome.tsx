@@ -1,6 +1,4 @@
 "use client";
-
-import AnnouncementBar from "@/components/announcement-bar";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -29,7 +27,6 @@ const SiteChrome: React.FC<SiteChromeProps> = ({ children, footer, navbar }) => 
 
   return (
     <>
-      {!isShopPage ? <AnnouncementBar /> : null}
       {navbar}
       {children}
       {footer}

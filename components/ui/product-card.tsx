@@ -1,5 +1,6 @@
 "use client";
 
+import { inferBrandFromProduct, normalizeCategoryLabel } from "@/lib/catalog";
 import Image from "next/image";
 import { MouseEventHandler, useMemo } from "react";
 import { Expand, ShoppingCart } from "lucide-react";
@@ -22,6 +23,8 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
   const router = useRouter();
   const imageUrl = data.images?.[0]?.url || "/images/image-1.jpg";
   const productHref = useMemo(() => `/product/${data?.id}`, [data?.id]);
+  const categoryLabel = normalizeCategoryLabel(data.category);
+  const brandLabel = inferBrandFromProduct(data);
 
   const handleClick = () => {
     router.push(productHref);
@@ -79,7 +82,9 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
       {/* Description */}
       <div>
         <p className="font-semibold text-lg">{data.name}</p>
-        <p className="text-sm text-gray-500">{data.category?.name}</p>
+        <p className="text-sm text-gray-500">
+          {brandLabel} / {categoryLabel}
+        </p>
       </div>
       {/* Price & Reiew */}
       <div className="flex items-center justify-between">

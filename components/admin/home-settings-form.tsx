@@ -9,6 +9,7 @@ import {
 import {
   BlogPageSettings,
   CollectionHeroSettings,
+  FooterSettings,
   HomeSettings,
   Product,
   ProductSectionSettings,
@@ -180,6 +181,63 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
           ...current.blog.newsletter,
           [field]: value,
         },
+      },
+    }));
+  };
+
+  const updateFooterField = <F extends keyof FooterSettings>(
+    field: F,
+    value: FooterSettings[F]
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      footer: {
+        ...current.footer,
+        [field]: value,
+      },
+    }));
+  };
+
+  const updateFooterLink = (
+    index: number,
+    field: "label" | "href",
+    value: string
+  ) => {
+    setSettings((current) => ({
+      ...current,
+      footer: {
+        ...current.footer,
+        links: current.footer.links.map((link, linkIndex) =>
+          linkIndex === index ? { ...link, [field]: value } : link
+        ),
+      },
+    }));
+  };
+
+  const addFooterLink = () => {
+    setSettings((current) => ({
+      ...current,
+      footer: {
+        ...current.footer,
+        links: [
+          ...current.footer.links,
+          {
+            id: `footer-link-${Date.now()}`,
+            label: "New link",
+            href: "/",
+            type: "link",
+          },
+        ],
+      },
+    }));
+  };
+
+  const removeFooterLink = (index: number) => {
+    setSettings((current) => ({
+      ...current,
+      footer: {
+        ...current.footer,
+        links: current.footer.links.filter((_, linkIndex) => linkIndex !== index),
       },
     }));
   };
@@ -791,6 +849,108 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
             }
             value={settings.newsletterSection.placeholder}
           />
+        </div>
+      </section>
+
+      <section className={sectionCardClass}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+              Footer Section
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+              Store footer content
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-500">
+              Control the footer brand copy, copyright text, credit visibility, and
+              customer-facing footer links.
+            </p>
+          </div>
+          <Button className="bg-[#111111]" onClick={addFooterLink}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add footer link
+          </Button>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm font-medium">Footer brand</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateFooterField("brandLabel", event.target.value)
+              }
+              value={settings.footer.brandLabel}
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium">Copyright text</label>
+            <input
+              className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+              onChange={(event) =>
+                updateFooterField("copyrightText", event.target.value)
+              }
+              value={settings.footer.copyrightText}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Footer description</label>
+          <textarea
+            className="mt-2 min-h-[100px] w-full rounded-2xl border px-3 py-3 text-sm"
+            onChange={(event) =>
+              updateFooterField("description", event.target.value)
+            }
+            value={settings.footer.description}
+          />
+        </div>
+
+        <label className="flex items-center gap-3 text-sm font-medium">
+          <input
+            checked={settings.footer.showCredit}
+            onChange={(event) =>
+              updateFooterField("showCredit", event.target.checked)
+            }
+            type="checkbox"
+          />
+          Show built-by credit
+        </label>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">Footer links</p>
+          <div className="mt-4 grid gap-4">
+            {settings.footer.links.map((link, index) => (
+              <div
+                className="grid gap-3 rounded-2xl border bg-white p-4 md:grid-cols-[1fr_1fr_auto]"
+                key={link.id}
+              >
+                <input
+                  className="h-11 rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateFooterLink(index, "label", event.target.value)
+                  }
+                  placeholder="Label"
+                  value={link.label}
+                />
+                <input
+                  className="h-11 rounded-xl border px-3 text-sm"
+                  onChange={(event) =>
+                    updateFooterLink(index, "href", event.target.value)
+                  }
+                  placeholder="/shop"
+                  value={link.href}
+                />
+                <Button
+                  className="border border-black/10 bg-white text-[#111111]"
+                  onClick={() => removeFooterLink(index)}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Remove
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

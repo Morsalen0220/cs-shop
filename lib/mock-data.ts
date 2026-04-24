@@ -15,18 +15,18 @@ export const billboards: Billboard[] = [
 
 export const categories: Category[] = [
   {
-    id: "running",
-    name: "Running",
+    id: "men",
+    name: "Men",
     billboard: billboards[0],
   },
   {
-    id: "lifestyle",
-    name: "Lifestyle",
+    id: "women",
+    name: "Women",
     billboard: billboards[1],
   },
   {
-    id: "basketball",
-    name: "Basketball",
+    id: "kids",
+    name: "Kids",
     billboard: billboards[0],
   },
 ];
@@ -47,6 +47,7 @@ export const products: Product[] = [
   {
     id: "nike-reactx",
     category: categories[0],
+    brand: "Nike",
     description: "Soft cushioning and a light feel for everyday running.",
     isArchived: false,
     isFeatured: true,
@@ -59,6 +60,7 @@ export const products: Product[] = [
   {
     id: "air-force-one",
     category: categories[1],
+    brand: "Nike",
     description: "Classic street style with a clean leather finish.",
     isArchived: false,
     isFeatured: true,
@@ -71,6 +73,7 @@ export const products: Product[] = [
   {
     id: "zoom-freak",
     category: categories[2],
+    brand: "Nike",
     description: "Responsive support for quick cuts and fast breaks.",
     isArchived: false,
     isFeatured: true,

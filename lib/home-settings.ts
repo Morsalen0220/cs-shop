@@ -82,6 +82,25 @@ export const defaultHomeSettings: HomeSettings = {
     placeholder: "Enter your email",
     buttonLabel: "Subscribe",
   },
+  footer: {
+    brandLabel: "Nikeshop",
+    description:
+      "Premium sneakers, curated drops, and a cleaner shopping experience from browse to checkout.",
+    copyrightText: "Nike Inc. All Rights Reserved",
+    showCredit: false,
+    links: [
+      { id: "footer-about", label: "About", href: "/about", type: "link" },
+      { id: "footer-contact", label: "Contact", href: "/contact", type: "link" },
+      { id: "footer-shop", label: "Shop", href: "/shop", type: "link" },
+      {
+        id: "footer-arrivals",
+        label: "New Arrivals",
+        href: "/new-arrivals",
+        type: "link",
+      },
+      { id: "footer-sale", label: "Sale", href: "/sale", type: "link" },
+    ],
+  },
   bestSellerSection: {
     enabled: true,
     title: "Best Sellers",
@@ -430,6 +449,25 @@ export const mergeHomeSettings = (
   newsletterSection: {
     ...defaultHomeSettings.newsletterSection,
     ...(settings?.newsletterSection ?? {}),
+  },
+  footer: {
+    ...defaultHomeSettings.footer,
+    ...(settings?.footer ?? {}),
+    links:
+      Array.isArray(settings?.footer?.links) && settings.footer.links.length > 0
+        ? settings.footer.links.map((item, index) => ({
+            ...defaultHomeSettings.footer.links[
+              index % defaultHomeSettings.footer.links.length
+            ],
+            ...item,
+            id:
+              item.id ||
+              `${String(item.label || "footer-link")
+                .toLowerCase()
+                .replace(/\s+/g, "-")}-${index}`,
+            type: "link",
+          }))
+        : defaultHomeSettings.footer.links,
   },
   bestSellerSection: {
     ...defaultHomeSettings.bestSellerSection,

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/navbar";
 import ModalProvider from "@/providers/modal-provider";
+import ThemeProvider from "@/providers/theme-provider";
 import ToastProvider from "@/providers/toast-provider";
 import SiteChrome from "@/components/site-chrome";
 
@@ -93,13 +94,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={BRFrima.className}>
-        <ModalProvider />
-        <ToastProvider />
-        <SiteChrome navbar={<Navbar />} footer={<Footer />}>
-          {children}
-        </SiteChrome>
+        <ThemeProvider>
+          <ModalProvider />
+          <ToastProvider />
+          <SiteChrome navbar={<Navbar />} footer={<Footer />}>
+            {children}
+          </SiteChrome>
+        </ThemeProvider>
       </body>
     </html>
   );

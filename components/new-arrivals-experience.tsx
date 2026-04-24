@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  BRAND_OPTIONS,
+  inferBrandFromProduct,
+  normalizeCategories,
+  normalizeCategoryLabel,
+} from "@/lib/catalog";
 import NoResults from "@/components/ui/no-results";
 import ProductCard from "@/components/ui/product-card";
 import { defaultHomeSettings, readHomeSettings } from "@/lib/home-settings";
@@ -24,14 +30,13 @@ const sortOptions = [
   { value: "name-asc", label: "Name: A to Z" },
 ];
 
-const brandOptions = ["Nike", "Adidas", "Puma", "Reebok", "New Balance", "Vans"];
-
 const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
   categories,
   colors,
   products,
   sizes,
 }) => {
+  const normalizedCategories = useMemo(() => normalizeCategories(categories), [categories]);
   const [settings, setSettings] = useState<HomeSettings>(defaultHomeSettings);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedColorId, setSelectedColorId] = useState("");
@@ -104,7 +109,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         return false;
       }
 
-      if (selectedBrand && !product.name.toLowerCase().includes(selectedBrand.toLowerCase())) {
+      if (selectedBrand && inferBrandFromProduct(product) !== selectedBrand) {
         return false;
       }
 
@@ -116,7 +121,12 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         return true;
       }
 
-      return [product.name, product.description, product.category.name]
+      return [
+        product.name,
+        product.description,
+        normalizeCategoryLabel(product.category),
+        inferBrandFromProduct(product),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(normalizedSearch);
@@ -157,13 +167,13 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
 
   const categoryCounts = useMemo(
     () =>
-      categories.map((category) => ({
+      normalizedCategories.map((category) => ({
         ...category,
         count: collectionProducts.filter(
           (product) => product.category.id === category.id
         ).length,
       })),
-    [categories, collectionProducts]
+    [normalizedCategories, collectionProducts]
   );
 
   const heroProducts = collectionProducts.slice(0, 2);
@@ -183,8 +193,8 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
   };
 
   return (
-    <div className="bg-[#f7f5f0] px-4 pb-24 pt-4 sm:px-6 lg:px-8">
-      <section className="relative overflow-hidden rounded-[10px] bg-[#e9e5dd] px-6 py-8 sm:px-10 lg:px-12">
+    <div className="new-arrivals-page bg-[#f7f5f0] px-4 pb-24 pt-4 sm:px-6 lg:px-8">
+      <section className="new-arrivals-hero relative overflow-hidden rounded-[10px] bg-[#e9e5dd] px-6 py-8 sm:px-10 lg:px-12">
         <div className="relative z-10 grid min-h-[280px] gap-6 lg:grid-cols-[0.9fr_1.1fr_90px] lg:items-center">
           <div>
             <h1 className="max-w-[8ch] text-6xl font-black uppercase leading-[0.92] tracking-[-0.08em] text-[#111111] sm:text-7xl lg:text-8xl">
@@ -245,7 +255,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         className="mt-6 grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)]"
         id="new-arrival-products"
       >
-        <aside className="space-y-5 rounded-[10px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start">
+        <aside className="new-arrivals-sidebar space-y-5 rounded-[10px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#111111]">
               Category
@@ -349,7 +359,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
               Brand
             </p>
             <div className="mt-4 space-y-2">
-              {brandOptions.map((brand) => (
+              {BRAND_OPTIONS.map((brand) => (
                 <label
                   className="flex items-center gap-2 text-sm text-gray-600"
                   key={brand}
@@ -377,7 +387,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         </aside>
 
         <section className="min-w-0">
-          <div className="mb-5 flex flex-col gap-4 rounded-[10px] bg-[#f7f5f0] lg:flex-row lg:items-center lg:justify-between">
+          <div className="new-arrivals-toolbar mb-5 flex flex-col gap-4 rounded-[10px] bg-[#f7f5f0] lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-3 overflow-auto">
               <button
                 className={cn(
@@ -391,7 +401,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
               >
                 All
               </button>
-              {categories.map((category) => (
+              {normalizedCategories.map((category) => (
                 <button
                   className={cn(
                     "whitespace-nowrap border-b-2 px-3 py-3 text-sm font-semibold transition",
@@ -437,7 +447,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
           </div>
 
           <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2">
+            <span className="new-arrivals-pill inline-flex items-center gap-2 rounded-full bg-white px-3 py-2">
               <SlidersHorizontal className="h-3.5 w-3.5" />
               {filteredProducts.length} items
             </span>
@@ -467,7 +477,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {filteredProducts.map((product, index) => (
                 <div className="relative" key={product.id}>
-                  <div className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-[#111111] shadow-sm">
+                  <div className="new-arrivals-heart absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-[#111111] shadow-sm">
                     <Heart className="h-4 w-4" />
                   </div>
                   <ProductCard
@@ -481,7 +491,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         </section>
       </div>
 
-      <section className="mt-12 overflow-hidden rounded-[10px] bg-[#e9ecef] px-6 py-8 sm:px-10">
+      <section className="new-arrivals-newsletter mt-12 overflow-hidden rounded-[10px] bg-[#e9ecef] px-6 py-8 sm:px-10">
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1fr_0.7fr] lg:items-center">
           <div>
             <h2 className="text-3xl font-black uppercase leading-none tracking-[-0.04em] text-[#111111]">
@@ -493,7 +503,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
               Subscribe to our newsletter and get exclusive deals and new arrival updates.
             </p>
           </div>
-          <div className="flex overflow-hidden rounded-lg bg-white">
+          <div className="new-arrivals-subscribe flex overflow-hidden rounded-lg bg-white">
             <input
               className="h-14 min-w-0 flex-1 px-5 text-sm outline-none"
               placeholder="Enter your email"

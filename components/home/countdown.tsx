@@ -45,14 +45,16 @@ const Countdown: React.FC<CountdownProps> = ({ target }) => {
 
   if (!isMounted) {
     return (
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-2.5">
         {["Days", "Hours", "Min", "Sec"].map((label) => (
           <div
             key={label}
-            className="rounded-3xl border border-black/10 bg-white/85 px-4 py-3 text-center"
+            className="flex min-w-0 flex-col items-center justify-center rounded-[24px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
           >
-            <div className="text-2xl font-semibold text-[#111111]">--</div>
-            <div className="text-[11px] uppercase tracking-[0.24em] text-gray-500">
+            <div className="min-w-0 text-[clamp(1.05rem,1.5vw,1.55rem)] font-semibold leading-none tabular-nums text-[#111111]">
+              --
+            </div>
+            <div className="mt-2 text-[10px] uppercase tracking-[0.16em] text-[#6b7280] sm:tracking-[0.22em]">
               {label}
             </div>
           </div>
@@ -63,23 +65,23 @@ const Countdown: React.FC<CountdownProps> = ({ target }) => {
 
   if (timeLeft.done) {
     return (
-      <div className="rounded-3xl border border-black/10 bg-white/80 px-5 py-4 text-sm font-semibold text-[#111111]">
+      <div className="rounded-[28px] border border-[#ead8cb] bg-[#fff8f2] px-5 py-4 text-sm font-semibold text-[#111111]">
         Offer window is live right now.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-4 gap-2.5">
       {segments.map((segment) => (
         <div
           key={segment.label}
-          className="rounded-3xl border border-black/10 bg-white/85 px-4 py-3 text-center"
+          className="flex min-w-0 flex-col items-center justify-center rounded-[24px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
         >
-          <div className="text-2xl font-semibold text-[#111111]">
+          <div className="min-w-0 text-[clamp(1.05rem,1.5vw,1.55rem)] font-semibold leading-none tabular-nums text-[#111111]">
             {String(segment.value).padStart(2, "0")}
           </div>
-          <div className="text-[11px] uppercase tracking-[0.24em] text-gray-500">
+          <div className="mt-2 text-[10px] uppercase tracking-[0.16em] text-[#6b7280] sm:tracking-[0.22em]">
             {segment.label}
           </div>
         </div>

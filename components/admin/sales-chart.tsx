@@ -1,19 +1,22 @@
 "use client";
 
 import { Product } from "@/types";
+import { Activity, ArrowUpRight, Dot, Clock3 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 interface SalesChartPoint {
   label: string;
   revenue: number;
   units: number;
+  conversion: number;
 }
 
 interface SalesChartProps {
   initialProducts: Product[];
 }
 
-const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+const formatCurrency = (value: number) =>
+  `$${Math.round(value).toLocaleString()}`;
 
 const buildLiveSeries = (products: Product[], timestamp: number): SalesChartPoint[] => {
   const totalRevenue = products.reduce(
@@ -22,30 +25,37 @@ const buildLiveSeries = (products: Product[], timestamp: number): SalesChartPoin
   );
   const activeProducts = products.filter((product) => !product.isArchived);
   const featuredProducts = products.filter((product) => product.isFeatured).length;
-  const baseCount = Math.max(activeProducts.length, 1);
-  const baseRevenue = Math.max(totalRevenue, 1200);
+  const baseRevenue = Math.max(totalRevenue, 2400);
+  const baseUnits = Math.max(activeProducts.length * 3, 18);
   const now = new Date(timestamp);
-  const currentMinute = now.getMinutes();
-  const currentSecond = now.getSeconds();
+  const minuteSeed = now.getMinutes();
+  const secondSeed = now.getSeconds();
 
-  return Array.from({ length: 6 }, (_, index) => {
-    const bucketOffset = 5 - index;
-    const activitySeed = currentMinute * 7 + currentSecond + bucketOffset * 9;
-    const swing = ((activitySeed % 11) - 5) / 10;
-    const spotlight = ((featuredProducts + index * 3 + currentSecond) % 9) / 14;
-    const units = Math.max(
-      Math.round(baseCount * (0.95 + spotlight + swing * 0.25)),
-      8
-    );
+  return Array.from({ length: 8 }, (_, index) => {
+    const age = 7 - index;
+    const pulse = minuteSeed * 11 + secondSeed * 3 + age * 7;
+    const marketSwing = ((pulse % 13) - 6) / 10;
+    const featuredLift = ((featuredProducts + index * 5 + secondSeed) % 10) / 16;
     const revenue = Math.max(
-      Math.round(baseRevenue * (0.22 + index * 0.08 + spotlight * 0.18 + swing * 0.06)),
-      900
+      Math.round(
+        baseRevenue *
+          (0.2 + index * 0.065 + featuredLift * 0.22 + marketSwing * 0.045)
+      ),
+      1200
+    );
+    const units = Math.max(
+      Math.round(baseUnits * (0.72 + index * 0.04 + featuredLift + marketSwing * 0.12)),
+      10
+    );
+    const conversion = Number(
+      Math.max(2.2, 3.1 + featuredLift * 2.4 + marketSwing * 0.45).toFixed(1)
     );
 
     return {
-      label: `${bucketOffset * 10}s`,
+      label: `${age * 5}m`,
       revenue,
       units,
+      conversion,
     };
   });
 };
@@ -70,6 +80,9 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
         });
 
         if (!response.ok) {
+          if (active) {
+            setTimestamp(Date.now());
+          }
           return;
         }
 
@@ -102,143 +115,281 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
     () => buildLiveSeries(products, timestamp),
     [products, timestamp]
   );
-  const chartHeight = 260;
-  const chartWidth = 760;
-  const maxRevenue = Math.max(...points.map((point) => point.revenue), 1);
-  const maxUnits = Math.max(...points.map((point) => point.units), 1);
-  const linePoints = points
-    .map((point, index) => {
-      const x = (chartWidth / Math.max(points.length - 1, 1)) * index;
-      const y = chartHeight - (point.revenue / maxRevenue) * (chartHeight - 24);
 
-      return `${x},${y}`;
-    })
+  const totalRevenue = points.reduce((sum, point) => sum + point.revenue, 0);
+  const totalUnits = points.reduce((sum, point) => sum + point.units, 0);
+  const averageConversion =
+    points.reduce((sum, point) => sum + point.conversion, 0) / points.length;
+  const latestRevenue = points[points.length - 1]?.revenue ?? 0;
+  const previousRevenue = points[points.length - 2]?.revenue ?? latestRevenue;
+  const revenueDelta =
+    previousRevenue === 0
+      ? 0
+      : ((latestRevenue - previousRevenue) / previousRevenue) * 100;
+
+  const chartHeight = 280;
+  const chartWidth = 920;
+  const maxRevenue = Math.max(...points.map((point) => point.revenue), 1);
+  const minRevenue = Math.min(...points.map((point) => point.revenue), maxRevenue);
+  const revenueRange = Math.max(maxRevenue - minRevenue, 1);
+
+  const coordinates = points.map((point, index) => {
+    const x = (chartWidth / Math.max(points.length - 1, 1)) * index;
+    const y =
+      chartHeight -
+      24 -
+      ((point.revenue - minRevenue) / revenueRange) * (chartHeight - 70);
+
+    return { ...point, x, y };
+  });
+
+  const linePath = coordinates
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
 
+  const areaPath = `${linePath} L ${coordinates[coordinates.length - 1]?.x ?? 0} ${chartHeight} L ${
+    coordinates[0]?.x ?? 0
+  } ${chartHeight} Z`;
+
+  const timelineMarkers = coordinates.slice(-3).reverse();
+
   return (
-    <div className="mt-8 rounded-[28px] border border-[#f0e7df] bg-[linear-gradient(180deg,_#fcfaf7_0%,_#f8f4ee_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="mt-8 overflow-hidden rounded-[30px] border border-[#ede5dd] bg-[radial-gradient(circle_at_top_right,_rgba(92,129,255,0.14),_transparent_28%),linear-gradient(180deg,_#ffffff_0%,_#f7f3ee_100%)] p-5 shadow-[0_20px_60px_rgba(17,17,17,0.06)] sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.26em] text-gray-400">
-            Sales snapshot
-          </p>
-          <p className="mt-2 text-lg font-semibold text-[#111111]">
-            Auto-refresh every 15 minutes
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+            <Clock3 className="h-3.5 w-3.5 text-[#ffb17a]" />
+            15 min refresh
+          </div>
+          <h3 className="mt-4 text-2xl font-semibold text-[#111111] sm:text-[28px]">
+            Revenue momentum
+          </h3>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+            Premium overview combining rolling revenue, unit activity, and
+            conversion movement from the latest refresh cycle.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-semibold">
-          <span className="inline-flex items-center gap-2 text-gray-500">
-            <span className="h-3 w-3 rounded-full bg-[#4f7df3]" />
-            Units sold
-          </span>
-          <span className="inline-flex items-center gap-2 text-gray-500">
-            <span className="h-[3px] w-5 rounded-full bg-[#ff7a45]" />
-            Estimated revenue
-          </span>
-          <span className="rounded-full bg-[#fff3ed] px-3 py-1.5 text-[#ff5a1f]">
-            Updated {new Date(timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-          </span>
+        <div className="rounded-[22px] border border-black/8 bg-white/90 px-4 py-3 shadow-[0_12px_32px_rgba(17,17,17,0.05)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">
+            Last sync
+          </p>
+          <p className="mt-2 text-sm font-semibold text-[#111111]">
+            {new Date(timestamp).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })}
+          </p>
+          <p className="mt-1 text-xs text-emerald-600">Auto-refreshing every 15 min</p>
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-[56px_minmax(0,1fr)_72px] gap-3">
-        <div className="flex h-[260px] flex-col justify-between pb-8 text-xs font-semibold text-gray-400">
-          {[maxUnits, Math.round(maxUnits * 0.75), Math.round(maxUnits * 0.5), Math.round(maxUnits * 0.25), 0].map(
-            (value, index) => (
-              <span key={`${value}-${index}`}>{value}</span>
-            )
-          )}
-        </div>
+      <div className="mt-6 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="overflow-hidden rounded-[28px] border border-black/8 bg-[#0f1117] p-5 text-white shadow-[0_18px_50px_rgba(17,17,17,0.16)]">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                Revenue run-rate
+              </p>
+              <p className="mt-3 min-w-0 break-words text-[clamp(1.35rem,2vw,2rem)] font-semibold leading-none">
+                {formatCurrency(totalRevenue)}
+              </p>
+            </div>
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                Units moving
+              </p>
+              <p className="mt-3 min-w-0 text-[clamp(1.35rem,2vw,2rem)] font-semibold leading-none">
+                {totalUnits}
+              </p>
+            </div>
+            <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+                Avg conversion
+              </p>
+              <p className="mt-3 min-w-0 text-[clamp(1.35rem,2vw,2rem)] font-semibold leading-none">
+                {averageConversion.toFixed(1)}%
+              </p>
+            </div>
+          </div>
 
-        <div>
-          <div className="relative h-[260px] overflow-hidden rounded-[22px] bg-white/80 px-4 pt-4">
-            <div className="pointer-events-none absolute inset-x-4 top-4 bottom-8 flex flex-col justify-between">
-              {[0, 1, 2, 3, 4].map((line) => (
-                <div key={line} className="border-t border-dashed border-black/8" />
-              ))}
+          <div className="mt-5 rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.05)_0%,_rgba(255,255,255,0.02)_100%)] p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
+                  Revenue curve
+                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <p className="text-xl font-semibold text-white">
+                    {formatCurrency(latestRevenue)}
+                  </p>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                      revenueDelta >= 0
+                        ? "bg-emerald-500/15 text-emerald-300"
+                        : "bg-rose-500/15 text-rose-300"
+                    }`}
+                  >
+                    <ArrowUpRight
+                      className={`h-3.5 w-3.5 ${revenueDelta < 0 ? "rotate-90" : ""}`}
+                    />
+                    {Math.abs(revenueDelta).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-[11px] font-semibold text-white/50">
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#7c9cff]" />
+                  Revenue
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#69f0c6]" />
+                  Conversion
+                </span>
+              </div>
             </div>
 
-            <div className="relative z-10 flex h-full items-end gap-4 pb-8">
-              {points.map((point) => (
-                <div key={point.label} className="flex flex-1 items-end justify-center">
-                  <div className="group flex w-full max-w-[52px] flex-col items-center justify-end gap-2">
-                    <span className="text-[11px] font-semibold text-[#4f7df3] opacity-80 transition">
-                      {point.units}
-                    </span>
-                    <div
-                      className="w-full rounded-t-[16px] bg-[linear-gradient(180deg,_#7ea2ff_0%,_#4f7df3_100%)] shadow-[0_14px_30px_rgba(79,125,243,0.22)] transition-all duration-700"
-                      style={{
-                        height: `${Math.max((point.units / maxUnits) * 168, 28)}px`,
-                      }}
-                    />
+            <div className="mt-5 overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.02)_0%,_rgba(255,255,255,0.00)_100%)] p-3">
+              <div className="relative h-[280px]">
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
+                  {[0, 1, 2, 3, 4].map((line) => (
+                    <div key={line} className="border-t border-dashed border-white/10" />
+                  ))}
+                </div>
+
+                <svg
+                  className="absolute inset-0 h-full w-full"
+                  preserveAspectRatio="none"
+                  viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+                >
+                  <defs>
+                    <linearGradient id="sales-area-gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                      <stop offset="0%" stopColor="#7c9cff" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#7c9cff" stopOpacity="0.02" />
+                    </linearGradient>
+                    <linearGradient id="sales-line-gradient-premium" x1="0%" x2="100%" y1="0%" y2="0%">
+                      <stop offset="0%" stopColor="#98b0ff" />
+                      <stop offset="100%" stopColor="#4f7df3" />
+                    </linearGradient>
+                  </defs>
+
+                  <path d={areaPath} fill="url(#sales-area-gradient)" />
+                  <path
+                    d={linePath}
+                    fill="none"
+                    stroke="url(#sales-line-gradient-premium)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="5"
+                  />
+
+                  {coordinates.map((point) => (
+                    <g key={point.label}>
+                      <circle cx={point.x} cy={point.y} fill="#0f1117" r="9" stroke="#7c9cff" strokeWidth="4" />
+                      <circle cx={point.x} cy={point.y} fill="#ffffff" r="3.2" />
+                    </g>
+                  ))}
+                </svg>
+
+                <div className="absolute inset-x-0 bottom-0 grid grid-cols-8 gap-2">
+                  {points.map((point) => (
+                    <div key={point.label} className="text-center">
+                      <p className="text-[11px] font-semibold text-white/80">{point.label}</p>
+                      <p className="mt-1 text-[10px] text-white/45">
+                        {formatCurrency(point.revenue)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          <div className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_16px_40px_rgba(17,17,17,0.05)]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-400">
+                  Live indicators
+                </p>
+                <h4 className="mt-2 text-lg font-semibold text-[#111111]">
+                  Performance pulse
+                </h4>
+              </div>
+              <Activity className="h-5 w-5 text-[#4f7df3]" />
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {[
+                {
+                  label: "Revenue trend",
+                  value: `${revenueDelta >= 0 ? "+" : "-"}${Math.abs(revenueDelta).toFixed(1)}%`,
+                  tone:
+                    revenueDelta >= 0
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "bg-rose-50 text-rose-600",
+                },
+                {
+                  label: "Current conversion",
+                  value: `${points[points.length - 1]?.conversion.toFixed(1) ?? "0.0"}%`,
+                  tone: "bg-[#eef3ff] text-[#4f7df3]",
+                },
+                {
+                  label: "Active catalog",
+                  value: `${products.filter((product) => !product.isArchived).length} live`,
+                  tone: "bg-[#fff3ed] text-[#ff5a1f]",
+                },
+              ].map((item) => (
+                <div
+                  className="flex items-center justify-between rounded-[20px] border border-black/6 bg-[#faf8f5] px-4 py-3"
+                  key={item.label}
+                >
+                  <p className="text-sm font-medium text-gray-500">{item.label}</p>
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.tone}`}>
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_16px_40px_rgba(17,17,17,0.05)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-400">
+              Activity stream
+            </p>
+            <h4 className="mt-2 text-lg font-semibold text-[#111111]">
+              Recent movement
+            </h4>
+
+            <div className="mt-5 space-y-3">
+              {timelineMarkers.map((point) => (
+                <div
+                  className="flex items-start gap-3 rounded-[20px] border border-black/6 bg-[#fcfaf7] px-4 py-3"
+                  key={point.label}
+                >
+                  <span className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#111111] text-white">
+                    <Dot className="h-6 w-6" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-semibold text-[#111111]">
+                        {formatCurrency(point.revenue)} generated
+                      </p>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
+                        {point.label} ago
+                      </p>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {point.units} units moved with {point.conversion.toFixed(1)}%
+                      conversion.
+                    </p>
                   </div>
                 </div>
               ))}
-
-              <svg
-                className="pointer-events-none absolute inset-x-4 top-4 bottom-8 h-[228px] w-[calc(100%-2rem)]"
-                preserveAspectRatio="none"
-                viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-              >
-                <defs>
-                  <linearGradient id="sales-line-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                    <stop offset="0%" stopColor="#ff9b68" />
-                    <stop offset="100%" stopColor="#ff5a1f" />
-                  </linearGradient>
-                </defs>
-                <polyline
-                  fill="none"
-                  points={linePoints}
-                  stroke="url(#sales-line-gradient)"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="4"
-                />
-                {points.map((point, index) => {
-                  const x = (chartWidth / Math.max(points.length - 1, 1)) * index;
-                  const y =
-                    chartHeight - (point.revenue / maxRevenue) * (chartHeight - 24);
-
-                  return (
-                    <g key={point.label}>
-                      <circle cx={x} cy={y} fill="#ffffff" r="8" stroke="#ff7a45" strokeWidth="4" />
-                      <text
-                        fill="#ff5a1f"
-                        fontSize="22"
-                        fontWeight="700"
-                        textAnchor="middle"
-                        x={x}
-                        y={Math.max(y - 18, 18)}
-                      >
-                        {point.revenue >= 1000 ? `${Math.round(point.revenue / 1000)}k` : point.revenue}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
             </div>
           </div>
-
-          <div
-            className="mt-3 grid gap-4 px-3"
-            style={{ gridTemplateColumns: `repeat(${points.length}, minmax(0, 1fr))` }}
-          >
-            {points.map((point) => (
-              <div key={point.label} className="text-center">
-                <p className="text-xs font-semibold text-gray-500">{point.label} ago</p>
-                <p className="mt-1 text-[11px] text-gray-400">{formatCurrency(point.revenue)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex h-[260px] flex-col justify-between pb-8 text-right text-xs font-semibold text-gray-400">
-          {[maxRevenue, maxRevenue * 0.75, maxRevenue * 0.5, maxRevenue * 0.25, 0].map(
-            (value, index) => (
-              <span key={`${value}-${index}`}>{formatCurrency(Math.round(value))}</span>
-            )
-          )}
         </div>
       </div>
     </div>

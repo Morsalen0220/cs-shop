@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { inferBrandFromProduct } from "@/lib/catalog";
 import type { Billboard, BlogPost, Category, Color, Product, Size } from "@/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -104,6 +105,7 @@ export const mapColor = (row: ColorRow): Color => ({
 export const mapProduct = (row: ProductRow): Product => ({
   id: row.id,
   name: row.name,
+  brand: inferBrandFromProduct({ name: row.name }),
   description: row.description,
   isArchived: Boolean(row.is_archived),
   isFeatured: Boolean(row.is_featured),

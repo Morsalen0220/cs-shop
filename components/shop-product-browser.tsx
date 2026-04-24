@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  BRAND_OPTIONS,
+  inferBrandFromProduct,
+  normalizeCategories,
+  normalizeCategoryLabel,
+} from "@/lib/catalog";
 import NoResults from "@/components/ui/no-results";
 import { Formatter } from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
@@ -22,6 +28,7 @@ import { MouseEventHandler, useEffect, useMemo, useState } from "react";
 interface ShopProductBrowserProps {
   categories: Category[];
   colors: Color[];
+  initialBrand?: string;
   initialCategoryId?: string;
   initialColorId?: string;
   initialSearch?: string;
@@ -39,7 +46,6 @@ const sortOptions = [
   { value: "name-desc", label: "Name: Z to A" },
 ];
 
-const brandOptions = ["Nike", "Adidas", "Puma", "New Balance", "Asics", "Vans"];
 const discountCycle = [20, 0, 25, 0, 0, 30, 0, 15];
 
 const ShopGridProductCard = ({
@@ -58,6 +64,8 @@ const ShopGridProductCard = ({
   const price = Number(product.price);
   const salePrice = discount ? Math.max(price - (price * discount) / 100, 0) : price;
   const imageUrl = product.images?.[0]?.url || "/images/image-1.jpg";
+  const brandLabel = inferBrandFromProduct(product);
+  const categoryLabel = normalizeCategoryLabel(product.category);
 
   const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
@@ -111,7 +119,9 @@ const ShopGridProductCard = ({
         <h3 className="line-clamp-2 min-h-[3rem] text-[1.1rem] font-bold leading-tight text-[#111111]">
           {product.name}
         </h3>
-        <p className="mt-1 text-sm text-gray-500">{product.category.name}</p>
+        <p className="mt-1 text-sm text-gray-500">
+          {brandLabel} / {categoryLabel}
+        </p>
 
         <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <span
@@ -150,6 +160,7 @@ const ShopGridProductCard = ({
 const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
   categories,
   colors,
+  initialBrand = "",
   initialCategoryId,
   initialColorId,
   initialSearch = "",
@@ -158,10 +169,11 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
   products,
   sizes,
 }) => {
+  const normalizedCategories = useMemo(() => normalizeCategories(categories), [categories]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(initialCategoryId ?? "");
   const [selectedColorId, setSelectedColorId] = useState(initialColorId ?? "");
   const [selectedSizeId, setSelectedSizeId] = useState(initialSizeId ?? "");
-  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState(initialBrand);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [sort, setSort] = useState(initialSort);
   const [viewMode, setViewMode] = useState<"compact" | "grid" | "list">("grid");
@@ -184,6 +196,10 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
   useEffect(() => {
     setSelectedSizeId(initialSizeId ?? "");
   }, [initialSizeId]);
+
+  useEffect(() => {
+    setSelectedBrand(initialBrand);
+  }, [initialBrand]);
 
   useEffect(() => {
     setSort(initialSort);
@@ -220,6 +236,12 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
       params.delete("sizeId");
     }
 
+    if (selectedBrand) {
+      params.set("brand", selectedBrand);
+    } else {
+      params.delete("brand");
+    }
+
     if (sort && sort !== "featured") {
       params.set("sort", sort);
     } else {
@@ -230,7 +252,7 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
     const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ""}`;
 
     window.history.replaceState({}, "", nextUrl);
-  }, [searchTerm, selectedCategoryId, selectedColorId, selectedSizeId, sort]);
+  }, [searchTerm, selectedCategoryId, selectedColorId, selectedSizeId, selectedBrand, sort]);
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -248,7 +270,7 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
         return false;
       }
 
-      if (selectedBrand && !product.name.toLowerCase().includes(selectedBrand.toLowerCase())) {
+      if (selectedBrand && inferBrandFromProduct(product) !== selectedBrand) {
         return false;
       }
 
@@ -260,7 +282,12 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
         return true;
       }
 
-      return [product.name, product.description, product.category.name]
+      return [
+        product.name,
+        product.description,
+        normalizeCategoryLabel(product.category),
+        inferBrandFromProduct(product),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(normalizedSearch);
@@ -316,11 +343,11 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
       counts.set(product.category.id, (counts.get(product.category.id) ?? 0) + 1);
     }
 
-    return categories.map((category) => ({
+    return normalizedCategories.map((category) => ({
       ...category,
       count: counts.get(category.id) ?? 0,
     }));
-  }, [categories, products]);
+  }, [normalizedCategories, products]);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
@@ -370,6 +397,24 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
 
           <div className="border-t border-black/10 pt-5">
             <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111111]">
+              Price Range
+            </p>
+            <input
+              className="mt-5 w-full accent-[#050505]"
+              max={maxPrice}
+              min="0"
+              onChange={(event) => setPriceLimit(Number(event.target.value))}
+              type="range"
+              value={priceLimit}
+            />
+            <div className="mt-2 flex justify-between text-sm text-gray-600">
+              <span>0</span>
+              <span>{priceLimit.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <div className="border-t border-black/10 pt-5">
+            <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111111]">
               Size (US)
             </p>
             <div className="mt-4 grid grid-cols-4 gap-2">
@@ -401,7 +446,7 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
               Brand
             </p>
             <div className="mt-4 space-y-3">
-              {brandOptions.map((brand) => (
+              {BRAND_OPTIONS.map((brand) => (
                 <label className="flex items-center gap-3 text-sm text-gray-700" key={brand}>
                   <input
                     checked={selectedBrand === brand}
@@ -441,24 +486,6 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
                   type="button"
                 />
               ))}
-            </div>
-          </div>
-
-          <div className="border-t border-black/10 pt-5">
-            <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111111]">
-              Price Range
-            </p>
-            <input
-              className="mt-5 w-full accent-[#050505]"
-              max={maxPrice}
-              min="0"
-              onChange={(event) => setPriceLimit(Number(event.target.value))}
-              type="range"
-              value={priceLimit}
-            />
-            <div className="mt-2 flex justify-between text-sm text-gray-600">
-              <span>0</span>
-              <span>{priceLimit.toLocaleString()}</span>
             </div>
           </div>
 
