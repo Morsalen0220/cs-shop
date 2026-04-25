@@ -11,7 +11,7 @@ import ProductCard from "@/components/ui/product-card";
 import { defaultHomeSettings, readHomeSettings } from "@/lib/home-settings";
 import { cn } from "@/lib/utils";
 import { Category, Color, HomeSettings, Product, Size } from "@/types";
-import { ArrowRight, Heart, Search, ShoppingBag, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Heart, Search, ShoppingBag, SlidersHorizontal, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
@@ -44,6 +44,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
   const [selectedBrand, setSelectedBrand] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [sort, setSort] = useState("latest");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   useEffect(() => {
     const syncSettings = () => setSettings(readHomeSettings());
@@ -255,7 +256,39 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[240px_minmax(0,1fr)]"
         id="new-arrival-products"
       >
-        <aside className="new-arrivals-sidebar space-y-5 rounded-[22px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start lg:rounded-[10px]">
+        {mobileFiltersOpen ? (
+          <button
+            aria-label="Close filters"
+            className="fixed inset-0 z-[60] bg-black/45 backdrop-blur-sm lg:hidden"
+            onClick={() => setMobileFiltersOpen(false)}
+            type="button"
+          />
+        ) : null}
+
+        <aside
+          className={cn(
+            "new-arrivals-sidebar space-y-5 rounded-[22px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:block lg:self-start lg:rounded-[10px]",
+            mobileFiltersOpen
+              ? "fixed inset-y-0 left-0 z-[70] block w-[min(86vw,340px)] overflow-y-auto rounded-none border-r border-black/10 shadow-[0_24px_70px_rgba(17,17,17,0.26)]"
+              : "hidden lg:block"
+          )}
+        >
+          <div className="flex items-center justify-between border-b border-black/10 pb-4 lg:hidden">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#111111]">
+                New Arrival Filters
+              </p>
+              <p className="mt-1 text-sm text-gray-500">Choose category, size, price</p>
+            </div>
+            <button
+              aria-label="Close filters"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10"
+              onClick={() => setMobileFiltersOpen(false)}
+              type="button"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
           <div>
             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#111111]">
               Category
@@ -419,6 +452,14 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                className="mobile-filter-trigger inline-flex h-11 w-fit self-start items-center justify-start gap-2 rounded-xl border border-black/10 bg-white px-4 text-sm font-semibold text-[#111111] lg:hidden"
+                onClick={() => setMobileFiltersOpen(true)}
+                type="button"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Filter
+              </button>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input

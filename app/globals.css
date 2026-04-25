@@ -748,6 +748,10 @@ body:not(.shop-page) [data-site-navbar] {
     letter-spacing: 0.1em;
   }
 
+  .mobile-filter-trigger {
+    margin-right: auto;
+  }
+
   .home-experience .home-hero-orb {
     right: -130px;
     top: 40px;
