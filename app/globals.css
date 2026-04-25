@@ -748,8 +748,8 @@ body:not(.shop-page) [data-site-navbar] {
     letter-spacing: 0.1em;
   }
 
-  .mobile-filter-trigger {
-    margin-right: auto;
+  .mobile-floating-filter {
+    writing-mode: horizontal-tb;
   }
 
   .home-experience .home-hero-orb {
@@ -805,5 +805,10 @@ body:not(.shop-page) [data-site-navbar] {
   .mobile-bottom-nav a {
     min-height: 46px;
     font-size: 9px;
+  }
+
+  .mobile-floating-filter {
+    height: 44px;
+    width: 40px;
   }
 }

@@ -354,6 +354,15 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-6">
+      <button
+        aria-label="Open filters"
+        className="mobile-floating-filter fixed left-0 top-[46%] z-50 inline-flex h-12 w-11 -translate-y-1/2 items-center justify-center rounded-r-2xl border border-l-0 border-black/10 bg-white text-[#111111] shadow-[0_14px_34px_rgba(17,17,17,0.16)] lg:hidden"
+        onClick={() => setMobileFiltersOpen(true)}
+        type="button"
+      >
+        <SlidersHorizontal className="h-4 w-4" />
+      </button>
+
       {mobileFiltersOpen ? (
         <button
           aria-label="Close filters"
@@ -552,14 +561,6 @@ const ShopProductBrowser: React.FC<ShopProductBrowserProps> = ({
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <button
-              className="mobile-filter-trigger inline-flex h-12 w-fit self-start items-center justify-start gap-2 rounded-xl border border-black/10 bg-white px-4 text-sm font-semibold text-[#111111] lg:hidden"
-              onClick={() => setMobileFiltersOpen(true)}
-              type="button"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Filter
-            </button>
             <div className="flex items-center gap-2">
               <span className="shrink-0 text-sm text-[#111111]">Sort by:</span>
               <select

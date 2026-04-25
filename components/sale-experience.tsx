@@ -431,6 +431,15 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)]" id="sale-products">
+        <button
+          aria-label="Open filters"
+          className="mobile-floating-filter fixed left-0 top-[46%] z-50 inline-flex h-12 w-11 -translate-y-1/2 items-center justify-center rounded-r-2xl border border-l-0 border-black/10 bg-white text-[#111111] shadow-[0_14px_34px_rgba(17,17,17,0.16)] lg:hidden"
+          onClick={() => setMobileFiltersOpen(true)}
+          type="button"
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+        </button>
+
         {mobileFiltersOpen ? (
           <button
             aria-label="Close filters"
@@ -626,14 +635,6 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
               ) : null}
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                className="mobile-filter-trigger inline-flex h-12 w-fit self-start items-center justify-start gap-2 rounded-xl border border-black/10 bg-white px-4 text-sm font-semibold text-[#111111] lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-                type="button"
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-                Filter
-              </button>
               <div className="relative">
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
