@@ -1,6 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import MobileBottomNav from "@/components/mobile-bottom-nav";
 
 interface SiteChromeProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ const SiteChrome: React.FC<SiteChromeProps> = ({ children, footer, navbar }) => 
       {navbar}
       {children}
       {footer}
+      <MobileBottomNav />
     </>
   );
 };

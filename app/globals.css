@@ -17,7 +17,19 @@ body {
     radial-gradient(circle at top, rgba(255, 128, 46, 0.08), transparent 26%),
     linear-gradient(180deg, #fffdfb 0%, #f7f1eb 100%);
   color: #111111;
+  overflow-x: hidden;
   transition: background 0.25s ease, color 0.25s ease;
+}
+
+* {
+  min-width: 0;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
 }
 
 html.dark-theme {
@@ -241,6 +253,14 @@ html.dark-theme .home-experience .home-hero-shell,
 html.dark-theme .home-experience .home-hero-inner {
   background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 24%),
     linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+}
+
+html.dark-theme .home-experience .home-hero-orb {
+  background: rgba(30, 41, 59, 0.68) !important;
+}
+
+html.dark-theme .home-experience .home-hero-ring {
+  border-color: rgba(148, 163, 184, 0.14) !important;
 }
 
 html.dark-theme .home-experience section[class*="from-\\[\\#fff3ea\\]"],
@@ -485,6 +505,43 @@ html.dark-theme .new-arrivals-page a[class*="bg-\\[\\#111111\\]"] {
   color: #020617 !important;
 }
 
+html.dark-theme .sale-page {
+  background: transparent !important;
+}
+
+html.dark-theme .sale-hero,
+html.dark-theme .sale-page aside,
+html.dark-theme .sale-page .sale-product-card,
+html.dark-theme .sale-page section[class*="bg-\\[\\#f1f1f1\\]"],
+html.dark-theme .sale-page button[class*="bg-\\[\\#f7f7f7\\]"] {
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+html.dark-theme .sale-page h1,
+html.dark-theme .sale-page h2,
+html.dark-theme .sale-page h3,
+html.dark-theme .sale-page p[class*="text-\\[\\#111111\\]"],
+html.dark-theme .sale-page span[class*="text-\\[\\#111111\\]"] {
+  color: #f8fafc !important;
+}
+
+html.dark-theme .sale-page p,
+html.dark-theme .sale-page span,
+html.dark-theme .sale-page label,
+html.dark-theme .sale-page [class*="text-gray-500"],
+html.dark-theme .sale-page [class*="text-gray-600"] {
+  color: #94a3b8 !important;
+}
+
+html.dark-theme .sale-page input,
+html.dark-theme .sale-page select {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
 html.dark-theme .blog-page {
   background: transparent !important;
 }
@@ -670,4 +727,79 @@ body.shop-page [data-site-navbar] {
 body:not(.shop-page) [data-site-navbar] {
   position: sticky;
   top: 0;
+}
+
+@media (max-width: 640px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  [data-site-navbar] {
+    position: sticky;
+    top: 0;
+  }
+
+  .navbar-brand-copy {
+    max-width: 76px;
+  }
+
+  .navbar-brand-label {
+    letter-spacing: 0.1em;
+  }
+
+  .home-experience .home-hero-orb {
+    right: -130px;
+    top: 40px;
+    height: 260px;
+    width: 260px;
+    opacity: 0.72;
+  }
+
+  .home-experience .home-hero-ring {
+    right: -30px;
+    top: 85px;
+    height: 210px;
+    width: 210px;
+    opacity: 0.6;
+  }
+
+  .home-experience .brand-marquee::before,
+  .home-experience .brand-marquee::after {
+    width: 28px;
+  }
+
+  .home-experience .brand-marquee-track > div {
+    min-width: 132px;
+    padding: 14px 18px;
+    font-size: 0.75rem;
+  }
+
+  footer .grid {
+    gap: 1.5rem;
+  }
+
+  footer input,
+  footer button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar-brand-copy {
+    max-width: 58px;
+  }
+
+  .navbar-brand-tagline {
+    display: none;
+  }
+
+  .mobile-bottom-nav {
+    inset-inline: 6px;
+  }
+
+  .mobile-bottom-nav a {
+    min-height: 46px;
+    font-size: 9px;
+  }
 }

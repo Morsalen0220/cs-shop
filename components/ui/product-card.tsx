@@ -51,12 +51,12 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
       onClick={handleClick}
       onFocus={handlePrefetch}
       onMouseEnter={handlePrefetch}
-      className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4"
+      className="group cursor-pointer space-y-3 rounded-[18px] border bg-white p-2.5 transition hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(17,17,17,0.08)] sm:space-y-4 sm:rounded-xl sm:p-3"
     >
       {/* Image & actions */}
-      <div className="aspect-square rounded-xl bg-gray-100 relative">
+      <div className="relative aspect-square overflow-hidden rounded-[16px] bg-gray-100 sm:rounded-xl">
         {badge ? (
-          <div className="absolute left-3 top-3 z-10 rounded-full bg-[#111111] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+          <div className="absolute left-2 top-2 z-10 rounded-full bg-[#111111] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-white sm:left-3 sm:top-3 sm:px-3 sm:text-[11px]">
             {badge}
           </div>
         ) : null}
@@ -64,10 +64,10 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
           src={imageUrl}
           alt={data.name}
           fill
-          className="aspect-square object-cover rounded-md"
+          className="rounded-md object-cover transition duration-300 group-hover:scale-105"
         />
-        <div className="opacity-0 group-hover:opacity-100 transition absolute w-full px-6 bottom-5">
-          <div className="flex gap-x-6 justify-center">
+        <div className="absolute bottom-3 w-full px-3 opacity-100 transition sm:bottom-5 sm:px-6 sm:opacity-0 sm:group-hover:opacity-100">
+          <div className="flex justify-center gap-x-3 sm:gap-x-6">
             <IconButton
               onClick={onPreview}
               icon={<Expand size={20} className="text-gray-600" />}
@@ -81,8 +81,10 @@ const ProductCard: React.FC<ProductCard> = ({ data, badge }) => {
       </div>
       {/* Description */}
       <div>
-        <p className="font-semibold text-lg">{data.name}</p>
-        <p className="text-sm text-gray-500">
+        <p className="line-clamp-2 min-h-[2.4em] text-[13px] font-semibold leading-tight sm:min-h-0 sm:text-lg">
+          {data.name}
+        </p>
+        <p className="mt-1 line-clamp-1 text-[11px] text-gray-500 sm:text-sm">
           {brandLabel} / {categoryLabel}
         </p>
       </div>

@@ -101,18 +101,18 @@ const SaleProductCard = ({
 
   return (
     <div
-      className="group cursor-pointer overflow-hidden rounded-[10px] border border-black/5 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(17,17,17,0.08)]"
+      className="sale-product-card group cursor-pointer overflow-hidden rounded-[18px] border border-black/5 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(17,17,17,0.08)] sm:rounded-[10px]"
       onClick={() => router.push(productHref)}
       onFocus={handlePrefetch}
       onMouseEnter={handlePrefetch}
     >
-      <div className="relative aspect-[1.12] bg-[#f4f4f4]">
-        <div className="absolute left-4 top-4 z-10 rounded bg-[#8a5a44] px-3 py-1 text-xs font-black text-white">
+      <div className="relative aspect-square bg-[#f4f4f4] sm:aspect-[1.12]">
+        <div className="absolute left-2 top-2 z-10 rounded-full bg-[#8a5a44] px-2.5 py-1 text-[10px] font-black text-white sm:left-4 sm:top-4 sm:rounded sm:px-3 sm:text-xs">
           -{discount}%
         </div>
         <button
           aria-label={`Preview ${product.name}`}
-          className="absolute right-4 top-4 z-10 rounded-full bg-white/80 p-2 text-[#111111] transition hover:bg-white"
+          className="absolute right-2 top-2 z-10 rounded-full bg-white/80 p-2 text-[#111111] transition hover:bg-white sm:right-4 sm:top-4"
           onClick={onPreview}
           type="button"
         >
@@ -120,29 +120,29 @@ const SaleProductCard = ({
         </button>
         <Image
           alt={product.name}
-          className="object-contain p-7 drop-shadow-[0_18px_22px_rgba(17,17,17,0.16)] transition duration-300 group-hover:scale-105"
+          className="object-contain p-4 drop-shadow-[0_18px_22px_rgba(17,17,17,0.16)] transition duration-300 group-hover:scale-105 sm:p-7"
           fill
           sizes="(max-width: 768px) 90vw, 280px"
           src={imageUrl}
         />
       </div>
 
-      <div className="p-4">
-        <h3 className="line-clamp-1 text-base font-black text-[#111111]">
+      <div className="p-3 sm:p-4">
+        <h3 className="line-clamp-2 min-h-[2.4em] text-[13px] font-black leading-tight text-[#111111] sm:min-h-0 sm:text-base">
           {product.name}
         </h3>
-        <p className="mt-1 text-sm text-gray-500">{product.category?.name}</p>
-        <div className="mt-4 flex items-end justify-between gap-3">
+        <p className="mt-1 line-clamp-1 text-[11px] text-gray-500 sm:text-sm">{product.category?.name}</p>
+        <div className="mt-3 flex flex-col gap-3 sm:mt-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400 line-through">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="text-[11px] text-gray-400 line-through sm:text-sm">
                 {Formatter.format(price)}
               </span>
-          <span className="text-base font-black text-[#8a5a44]">
+          <span className="text-[13px] font-black text-[#8a5a44] sm:text-base">
                 {Formatter.format(salePrice)}
               </span>
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-[11px] text-gray-500 sm:text-xs">
               <span className="text-[#8a5a44]">★</span> 4.{discount % 9} ({80 + discount})
             </p>
           </div>
@@ -334,32 +334,32 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
   const sideLabelParts = (hero.sideLabel || "Limited time offer").split(" ");
 
   return (
-    <div className="bg-white px-4 pb-20 pt-4 sm:px-6 lg:px-8">
-      <section className="relative overflow-hidden rounded-[10px] bg-[radial-gradient(circle_at_58%_48%,_rgba(244,222,209,0.42),_transparent_24%),linear-gradient(115deg,_#090909_0%,_#151515_42%,_#d8b5a3_42%,_#f4ded1_100%)] px-6 py-8 text-white sm:px-10 lg:px-14">
+    <div className="sale-page bg-white px-2 pb-16 pt-3 sm:px-6 sm:pb-20 lg:px-8 lg:pt-4">
+      <section className="sale-hero relative overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_58%_48%,_rgba(244,222,209,0.42),_transparent_24%),linear-gradient(115deg,_#090909_0%,_#151515_42%,_#d8b5a3_42%,_#f4ded1_100%)] px-4 py-6 text-white sm:rounded-[10px] sm:px-10 sm:py-8 lg:px-14">
         <div className="absolute inset-y-0 right-[11%] hidden text-[160px] font-black uppercase leading-none tracking-[-0.12em] text-white/5 lg:block">
           SALE
         </div>
-        <div className="relative z-10 grid min-h-[300px] gap-8 lg:grid-cols-[0.9fr_1fr_150px] lg:items-center">
+        <div className="relative z-10 grid min-h-[240px] gap-6 sm:min-h-[300px] lg:grid-cols-[0.9fr_1fr_150px] lg:items-center">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-[#f4ded1]">
               {hero.eyebrow || "Biggest sale of the season"}
             </p>
-            <h1 className="mt-5 text-5xl font-black uppercase leading-[0.92] tracking-[-0.05em] sm:text-7xl">
+            <h1 className="mt-4 text-[clamp(2.7rem,15vw,4rem)] font-black uppercase leading-[0.92] tracking-[-0.05em] sm:mt-5 sm:text-7xl">
               {hero.title || "Up to"}
               <span className="block text-[#f4ded1]">
                 {hero.highlightText || "50% off"}
               </span>
-              <span className="block text-2xl tracking-normal text-white">
+              <span className="block text-xl tracking-normal text-white sm:text-2xl">
                 {hero.subtitle || "On selected items"}
               </span>
             </h1>
-            <p className="mt-5 max-w-md text-base leading-6 text-white/82">
+            <p className="mt-4 max-w-md text-sm leading-6 text-white/82 sm:mt-5 sm:text-base">
               {hero.description ||
                 section.description ||
                 "Top brands. Best styles. Limited time only!"}
             </p>
             <a
-              className="mt-7 inline-flex items-center gap-4 rounded-md bg-white px-7 py-4 text-sm font-black uppercase tracking-[0.08em] text-[#111111]"
+              className="mt-6 inline-flex w-full items-center justify-center gap-4 rounded-2xl bg-white px-6 py-3 text-sm font-black uppercase tracking-[0.08em] text-[#111111] sm:mt-7 sm:w-auto sm:rounded-md sm:px-7 sm:py-4"
               href="#sale-products"
             >
               {hero.ctaLabel || "Shop sale"}
@@ -369,7 +369,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
             </a>
           </div>
 
-          <div className="relative h-[260px] sm:h-[330px]">
+          <div className="relative h-[210px] sm:h-[330px]">
             {heroImageUrl ? (
               <Image
                 alt={`${hero.title || "Sale"} hero`}
@@ -396,11 +396,11 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
         </div>
       </section>
 
-      <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4 xl:grid-cols-7">
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:grid-cols-4 sm:gap-4 xl:grid-cols-7">
         {categoryTiles.slice(0, 7).map((tile) => (
           <button
             className={cn(
-              "rounded-[10px] border bg-[#f7f7f7] px-4 py-4 text-center transition",
+              "rounded-[18px] border bg-[#f7f7f7] px-3 py-3 text-center transition sm:rounded-[10px] sm:px-4 sm:py-4",
               selectedCategoryId === tile.id
                 ? "border-[#d8b5a3] bg-[#fff5ef] text-[#8a5a44]"
                 : "border-transparent text-[#111111] hover:border-black/10"
@@ -428,7 +428,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)]" id="sale-products">
-        <aside className="space-y-5 rounded-[10px] border border-black/10 bg-white p-4 lg:sticky lg:top-6 lg:self-start">
+        <aside className="space-y-5 rounded-[22px] border border-black/10 bg-white p-4 lg:sticky lg:top-6 lg:self-start lg:rounded-[10px]">
           <div className="flex items-center justify-between border-b border-black/10 pb-4">
             <p className="text-xl font-black text-[#111111]">Filter By</p>
             <span className="text-lg">−</span>
@@ -602,9 +602,9 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#111111]">Sort by:</span>
+                <span className="shrink-0 text-sm text-[#111111]">Sort by:</span>
                 <select
-                  className="h-12 rounded-xl border border-black/10 bg-white px-4 text-sm outline-none"
+                  className="h-12 min-w-0 flex-1 rounded-xl border border-black/10 bg-white px-3 text-sm outline-none sm:flex-none sm:px-4"
                   onChange={(event) => setSort(event.target.value)}
                   value={sort}
                 >
@@ -628,7 +628,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
           ) : filteredSaleProducts.length === 0 ? (
             <NoResults />
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
               {filteredSaleProducts.map(({ discount, product }) => (
                 <SaleProductCard
                   discount={discount}
@@ -641,7 +641,7 @@ const SaleExperience: React.FC<SaleExperienceProps> = ({
         </section>
       </div>
 
-      <section className="mt-10 grid gap-4 rounded-[10px] bg-[#f1f1f1] px-6 py-5 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-8 grid gap-3 rounded-[22px] bg-[#f1f1f1] px-4 py-4 sm:mt-10 sm:grid-cols-2 sm:gap-4 sm:rounded-[10px] sm:px-6 sm:py-5 xl:grid-cols-4">
         {serviceItems.map((item) => {
           const Icon = item.icon;
 

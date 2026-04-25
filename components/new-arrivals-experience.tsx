@@ -193,11 +193,11 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
   };
 
   return (
-    <div className="new-arrivals-page bg-[#f7f5f0] px-4 pb-24 pt-4 sm:px-6 lg:px-8">
-      <section className="new-arrivals-hero relative overflow-hidden rounded-[10px] bg-[#e9e5dd] px-6 py-8 sm:px-10 lg:px-12">
-        <div className="relative z-10 grid min-h-[280px] gap-6 lg:grid-cols-[0.9fr_1.1fr_90px] lg:items-center">
+    <div className="new-arrivals-page bg-[#f7f5f0] px-2 pb-16 pt-3 sm:px-6 sm:pb-24 lg:px-8 lg:pt-4">
+      <section className="new-arrivals-hero relative overflow-hidden rounded-[24px] bg-[#e9e5dd] px-4 py-6 sm:rounded-[10px] sm:px-10 sm:py-8 lg:px-12">
+        <div className="relative z-10 grid min-h-[220px] gap-5 sm:min-h-[280px] lg:grid-cols-[0.9fr_1.1fr_90px] lg:items-center">
           <div>
-            <h1 className="max-w-[8ch] text-6xl font-black uppercase leading-[0.92] tracking-[-0.08em] text-[#111111] sm:text-7xl lg:text-8xl">
+            <h1 className="max-w-[8ch] text-[clamp(3rem,17vw,4.2rem)] font-black uppercase leading-[0.92] tracking-[-0.08em] text-[#111111] sm:text-7xl lg:text-8xl">
               {hero.title || section.title || "New Arrivals"}
             </h1>
             {hero.eyebrow ? (
@@ -205,13 +205,13 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
                 {hero.eyebrow}
               </p>
             ) : null}
-            <p className="mt-5 max-w-xs text-base leading-6 text-[#1f1f1f]">
+            <p className="mt-4 max-w-xs text-sm leading-6 text-[#1f1f1f] sm:mt-5 sm:text-base">
               {hero.description ||
                 section.description ||
                 "Fresh styles. Latest trends. Step into the new."}
             </p>
             <a
-              className="mt-6 inline-flex items-center gap-4 rounded-full bg-[#050505] px-7 py-3 text-xs font-black uppercase tracking-[0.12em] text-white"
+              className="mt-6 inline-flex w-full items-center justify-center gap-4 rounded-full bg-[#050505] px-6 py-3 text-xs font-black uppercase tracking-[0.12em] text-white sm:w-auto sm:px-7"
               href="#new-arrival-products"
             >
               {hero.ctaLabel || "Shop now"}
@@ -221,12 +221,12 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
             </a>
           </div>
 
-          <div className="relative h-[240px] sm:h-[300px]">
+          <div className="relative h-[190px] overflow-hidden sm:h-[300px]">
             {heroImages.map((imageUrl, index) => (
               <div
                 key={`${imageUrl}-${index}`}
                 className={cn(
-                  "absolute top-1/2 h-[210px] w-[300px] -translate-y-1/2 sm:h-[250px] sm:w-[360px]",
+                  "absolute top-1/2 h-[170px] w-[230px] -translate-y-1/2 sm:h-[250px] sm:w-[360px]",
                   index === 0
                     ? "left-0 rotate-[-10deg]"
                     : "right-0 rotate-[10deg]"
@@ -252,10 +252,10 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
       </section>
 
       <div
-        className="mt-6 grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)]"
+        className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[240px_minmax(0,1fr)]"
         id="new-arrival-products"
       >
-        <aside className="new-arrivals-sidebar space-y-5 rounded-[10px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start">
+        <aside className="new-arrivals-sidebar space-y-5 rounded-[22px] bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start lg:rounded-[10px]">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#111111]">
               Category
@@ -387,7 +387,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         </aside>
 
         <section className="min-w-0">
-          <div className="new-arrivals-toolbar mb-5 flex flex-col gap-4 rounded-[10px] bg-[#f7f5f0] lg:flex-row lg:items-center lg:justify-between">
+          <div className="new-arrivals-toolbar mb-5 flex flex-col gap-4 rounded-[18px] bg-[#f7f5f0] lg:flex-row lg:items-center lg:justify-between lg:rounded-[10px]">
             <div className="flex items-center gap-3 overflow-auto">
               <button
                 className={cn(
@@ -430,9 +430,9 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
                 />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#111111]">Sort by:</span>
+                <span className="shrink-0 text-sm text-[#111111]">Sort by:</span>
                 <select
-                  className="h-11 rounded-xl border border-black/10 bg-white px-4 text-sm font-semibold outline-none"
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-black/10 bg-white px-3 text-sm font-semibold outline-none sm:flex-none sm:px-4"
                   onChange={(event) => setSort(event.target.value)}
                   value={sort}
                 >
@@ -474,7 +474,7 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
           ) : filteredProducts.length === 0 ? (
             <NoResults />
           ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
               {filteredProducts.map((product, index) => (
                 <div className="relative" key={product.id}>
                   <div className="new-arrivals-heart absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-[#111111] shadow-sm">
@@ -491,10 +491,10 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
         </section>
       </div>
 
-      <section className="new-arrivals-newsletter mt-12 overflow-hidden rounded-[10px] bg-[#e9ecef] px-6 py-8 sm:px-10">
+      <section className="new-arrivals-newsletter mt-10 overflow-hidden rounded-[24px] bg-[#e9ecef] px-4 py-6 sm:mt-12 sm:rounded-[10px] sm:px-10 sm:py-8">
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1fr_0.7fr] lg:items-center">
           <div>
-            <h2 className="text-3xl font-black uppercase leading-none tracking-[-0.04em] text-[#111111]">
+            <h2 className="text-2xl font-black uppercase leading-none tracking-[-0.04em] text-[#111111] sm:text-3xl">
               Get 10% off
               <br />
               your first order
@@ -503,14 +503,14 @@ const NewArrivalsExperience: React.FC<NewArrivalsExperienceProps> = ({
               Subscribe to our newsletter and get exclusive deals and new arrival updates.
             </p>
           </div>
-          <div className="new-arrivals-subscribe flex overflow-hidden rounded-lg bg-white">
+          <div className="new-arrivals-subscribe flex flex-col overflow-hidden rounded-lg bg-white sm:flex-row">
             <input
-              className="h-14 min-w-0 flex-1 px-5 text-sm outline-none"
+              className="h-12 min-w-0 flex-1 px-4 text-sm outline-none sm:h-14 sm:px-5"
               placeholder="Enter your email"
               type="email"
             />
             <button
-              className="inline-flex h-14 items-center gap-2 bg-[#111111] px-7 text-xs font-black uppercase tracking-[0.12em] text-white"
+              className="inline-flex h-12 items-center justify-center gap-2 bg-[#111111] px-7 text-xs font-black uppercase tracking-[0.12em] text-white sm:h-14"
               type="button"
             >
               Subscribe

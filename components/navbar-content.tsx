@@ -68,35 +68,35 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
   return (
     <div
       data-navbar-content
-      className={`relative px-3 sm:px-6 lg:px-8 ${
-        isShopPage ? "py-1.5" : "py-2"
+      className={`relative px-2 sm:px-6 lg:px-8 ${
+        isShopPage ? "py-1" : "py-1.5"
       }`}
     >
       <div
-        className={`flex items-center gap-3 ${
-          isShopPage ? "min-h-[48px] md:min-h-[56px]" : "min-h-[52px] md:min-h-[60px]"
+        className={`flex items-center gap-2 ${
+          isShopPage ? "min-h-[44px] md:min-h-[56px]" : "min-h-[48px] md:min-h-[60px]"
         }`}
       >
         <Link
           aria-label="Nike home page"
           href="/"
           prefetch
-          className="group flex shrink-0 items-center gap-3"
+          className="group flex min-w-0 shrink items-center gap-2 sm:gap-3"
           onMouseEnter={() => prefetchRoute("/")}
         >
           <div
             className={`navbar-brand-chip flex items-center justify-center rounded-full border border-black/10 bg-white shadow-sm transition group-hover:scale-105 ${
               isShopPage
-                ? "h-[32px] w-[32px] md:h-[42px] md:w-[42px]"
-                : "h-[34px] w-[34px] md:h-[46px] md:w-[46px]"
+                ? "h-[28px] w-[28px] md:h-[42px] md:w-[42px]"
+                : "h-[30px] w-[30px] md:h-[46px] md:w-[46px]"
             }`}
           >
             <svg
               aria-hidden="true"
               className={`transition-transform group-hover:scale-110 ${
                 isShopPage
-                  ? "h-[16px] w-[16px] md:h-[23px] md:w-[23px]"
-                  : "h-[17px] w-[17px] md:h-[25px] md:w-[25px]"
+                  ? "h-[14px] w-[14px] md:h-[23px] md:w-[23px]"
+                  : "h-[15px] w-[15px] md:h-[25px] md:w-[25px]"
               }`}
               fill="none"
               focusable="false"
@@ -113,13 +113,13 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
               ></path>
             </svg>
           </div>
-          <div className="min-w-0 max-w-[120px] sm:block md:max-w-none">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-gray-500 md:text-[10px] md:tracking-[0.24em]">
+          <div className="navbar-brand-copy min-w-0 max-w-[82px] sm:block sm:max-w-[180px] md:max-w-none">
+            <p className="navbar-brand-label truncate text-[8px] font-semibold uppercase tracking-[0.14em] text-gray-500 md:text-[10px] md:tracking-[0.24em]">
               {settings.header.brandLabel}
             </p>
             <p
-              className={`truncate font-semibold leading-tight text-[#111111] ${
-                isShopPage ? "text-[11px] sm:text-[15px]" : "text-[12px] sm:text-base"
+              className={`navbar-brand-tagline truncate font-semibold leading-tight text-[#111111] ${
+                isShopPage ? "text-[10px] sm:text-[15px]" : "text-[11px] sm:text-base"
               }`}
             >
               {settings.header.tagline}
@@ -127,10 +127,10 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
           </div>
         </Link>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-3">
           <button
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            className="navbar-action-btn inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white lg:hidden"
+            className="navbar-action-btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white lg:hidden"
             onClick={() => setMobileMenuOpen((current) => !current)}
             type="button"
           >
@@ -150,20 +150,20 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
 
       {mobileMenuOpen ? (
         <div className={`${isShopPage ? "mt-2" : "mt-2.5"} lg:hidden`}>
-          <div className="navbar-mobile-panel overflow-hidden rounded-[24px] border border-black/8 bg-white shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
+          <div className="navbar-mobile-panel overflow-hidden rounded-[22px] border border-black/8 bg-white shadow-[0_16px_40px_rgba(17,17,17,0.08)]">
             <div className="border-b border-black/8 px-4 py-3">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-500">
                 Menu
               </p>
             </div>
-            <div className="space-y-5 p-4">
+            <div className="space-y-4 p-3.5">
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {mobilePrimaryLinks.map((item) => (
                   <Link
                     key={item.id}
                     href={item.href}
                     prefetch
-                    className="rounded-[16px] border border-black/10 bg-[#faf7f3] px-4 py-3 text-center text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                    className="min-h-[44px] rounded-[16px] border border-black/10 bg-[#faf7f3] px-3 py-3 text-center text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
                     onMouseEnter={() => prefetchRoute(item.href)}
                   >
                     {item.label}
@@ -181,7 +181,7 @@ const NavbarContent: React.FC<NavbarContentProps> = ({ categories }) => {
                       key={category.id}
                       href={`/category/${category.id}`}
                       prefetch
-                      className="rounded-full bg-[#f6f1eb] px-4 py-2 text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
+                      className="min-h-[40px] rounded-full bg-[#f6f1eb] px-4 py-2 text-[13px] font-semibold text-[#111111] transition hover:bg-[#111111] hover:text-white"
                       onMouseEnter={() => prefetchRoute(`/category/${category.id}`)}
                     >
                       {category.name}

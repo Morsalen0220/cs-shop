@@ -45,16 +45,16 @@ const Countdown: React.FC<CountdownProps> = ({ target }) => {
 
   if (!isMounted) {
     return (
-      <div className="grid grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
         {["Days", "Hours", "Min", "Sec"].map((label) => (
           <div
             key={label}
-            className="flex min-w-0 flex-col items-center justify-center rounded-[24px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+            className="flex min-w-0 flex-col items-center justify-center rounded-[18px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] sm:rounded-[24px] sm:py-4"
           >
-            <div className="min-w-0 text-[clamp(1.05rem,1.5vw,1.55rem)] font-semibold leading-none tabular-nums text-[#111111]">
+            <div className="min-w-0 text-[clamp(0.92rem,5vw,1.18rem)] font-semibold leading-none tabular-nums text-[#111111] sm:text-[clamp(1.05rem,1.5vw,1.55rem)]">
               --
             </div>
-            <div className="mt-2 text-[10px] uppercase tracking-[0.16em] text-[#6b7280] sm:tracking-[0.22em]">
+            <div className="mt-1.5 text-[8px] uppercase tracking-[0.12em] text-[#6b7280] sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
               {label}
             </div>
           </div>
@@ -72,16 +72,16 @@ const Countdown: React.FC<CountdownProps> = ({ target }) => {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-2.5">
+    <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
       {segments.map((segment) => (
         <div
           key={segment.label}
-          className="flex min-w-0 flex-col items-center justify-center rounded-[24px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-4 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+          className="flex min-w-0 flex-col items-center justify-center rounded-[18px] border border-[#ead8cb] bg-[#fff8f2] px-1 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] sm:rounded-[24px] sm:py-4"
         >
-          <div className="min-w-0 text-[clamp(1.05rem,1.5vw,1.55rem)] font-semibold leading-none tabular-nums text-[#111111]">
+          <div className="min-w-0 text-[clamp(0.92rem,5vw,1.18rem)] font-semibold leading-none tabular-nums text-[#111111] sm:text-[clamp(1.05rem,1.5vw,1.55rem)]">
             {String(segment.value).padStart(2, "0")}
           </div>
-          <div className="mt-2 text-[10px] uppercase tracking-[0.16em] text-[#6b7280] sm:tracking-[0.22em]">
+          <div className="mt-1.5 text-[8px] uppercase tracking-[0.12em] text-[#6b7280] sm:mt-2 sm:text-[10px] sm:tracking-[0.22em]">
             {segment.label}
           </div>
         </div>

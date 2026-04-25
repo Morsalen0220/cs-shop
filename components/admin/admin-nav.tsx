@@ -25,6 +25,7 @@ const workspaceRoutes = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/website", label: "Nikeshop", icon: MonitorSmartphone },
   { href: "/admin/header", label: "Header", icon: PanelTop },
+  { href: "/admin/footer", label: "Footer", icon: PanelTop },
   { href: "/admin/new-arrivals", label: "New Arrivals Page", icon: Sparkles },
   { href: "/admin/sale", label: "Sale Page", icon: BadgePercent },
   { href: "/admin/blogs", label: "Blog Posts", icon: PanelTop },

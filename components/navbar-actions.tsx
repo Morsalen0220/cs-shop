@@ -37,7 +37,7 @@ const NavbarActions = () => {
   }
 
   return (
-    <div className="relative flex items-center gap-x-1.5 md:gap-x-2.5">
+    <div className="relative flex items-center gap-x-1 md:gap-x-2.5">
       <ThemeToggle />
       <button
         aria-label="My account"
@@ -49,7 +49,7 @@ const NavbarActions = () => {
       </button>
       <button
         aria-label="Search products"
-        className="navbar-action-btn inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white md:h-10 md:w-10"
+        className="navbar-action-btn inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-white text-[#111111] transition hover:border-black/20 hover:bg-black hover:text-white md:h-10 md:w-10"
         onClick={() => setSearchOpen((current) => !current)}
         type="button"
       >
@@ -78,10 +78,10 @@ const NavbarActions = () => {
       ) : null}
       <Button
         onClick={() => router.push("/cart")}
-        className="navbar-cart-btn flex h-9 items-center rounded-full bg-[#111111] px-3 py-2 shadow-[0_14px_35px_rgba(17,17,17,0.16)] md:h-auto md:px-4"
+        className="navbar-cart-btn hidden h-8 items-center rounded-full bg-[#111111] px-2.5 py-2 shadow-[0_14px_35px_rgba(17,17,17,0.16)] sm:flex sm:h-9 sm:px-3 md:h-auto md:px-4"
       >
         <ShoppingBag size={16} color="white" />
-        <span className="ml-1.5 text-[12px] font-medium text-white md:ml-2 md:text-[13px]">
+        <span className="ml-1 text-[11px] font-medium text-white md:ml-2 md:text-[13px]">
           {cart.items.length}
         </span>
       </Button>

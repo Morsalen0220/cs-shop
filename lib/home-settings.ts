@@ -454,8 +454,8 @@ export const mergeHomeSettings = (
     ...defaultHomeSettings.footer,
     ...(settings?.footer ?? {}),
     links:
-      Array.isArray(settings?.footer?.links) && settings.footer.links.length > 0
-        ? settings.footer.links.map((item, index) => ({
+      (settings?.footer?.links ?? []).length > 0
+        ? (settings?.footer?.links ?? []).map((item, index) => ({
             ...defaultHomeSettings.footer.links[
               index % defaultHomeSettings.footer.links.length
             ],

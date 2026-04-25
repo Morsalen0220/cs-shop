@@ -75,7 +75,7 @@ const ProductTile = ({
 
   return (
     <article
-      className="home-product-tile group cursor-pointer overflow-hidden rounded-[26px] border border-black/8 bg-white shadow-[0_18px_42px_rgba(17,17,17,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(17,17,17,0.08)]"
+      className="home-product-tile group cursor-pointer overflow-hidden rounded-[18px] border border-black/8 bg-white shadow-[0_18px_42px_rgba(17,17,17,0.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(17,17,17,0.08)] sm:rounded-[26px]"
       onClick={handleNavigate}
       onFocus={handlePrefetch}
       onMouseEnter={handlePrefetch}
@@ -90,7 +90,7 @@ const ProductTile = ({
     >
       <div className="relative aspect-[1/1] overflow-hidden bg-[linear-gradient(180deg,_#f7f3ee_0%,_#f0e8df_100%)]">
         {badge ? (
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-[#ff6a1a] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+          <span className="absolute left-2 top-2 z-10 rounded-full bg-[#ff6a1a] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white sm:left-3 sm:top-3 sm:px-3 sm:text-[10px]">
             {badge}
           </span>
         ) : null}
@@ -102,20 +102,20 @@ const ProductTile = ({
           src={imageUrl}
         />
       </div>
-      <div className="space-y-2 p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#ff6a1a]">
+      <div className="space-y-1.5 p-3 sm:space-y-2 sm:p-4">
+        <p className="truncate text-[9px] font-semibold uppercase tracking-[0.16em] text-[#ff6a1a] sm:text-[10px] sm:tracking-[0.2em]">
           {brandLabel}
         </p>
-        <h3 className="line-clamp-1 text-[15px] font-semibold text-[#111111]">
+        <h3 className="line-clamp-2 min-h-[2.4em] text-[13px] font-semibold leading-tight text-[#111111] sm:min-h-0 sm:text-[15px]">
           {product.name}
         </h3>
         <div className="flex flex-col gap-2">
-          <span className="block min-w-0 break-words text-lg font-semibold leading-none text-[#111111]">
+          <span className="block min-w-0 break-words text-[15px] font-semibold leading-none text-[#111111] sm:text-lg">
             {Formatter.format(Number(product.price))}
           </span>
-          <div className="flex flex-wrap items-center gap-1 text-[#f59e0b]">
+          <div className="flex flex-wrap items-center gap-0.5 text-[#f59e0b] sm:gap-1">
             {Array.from({ length: 5 }).map((_, index) => (
-              <Star key={index} className="h-3.5 w-3.5 fill-current" />
+              <Star key={index} className="h-3 w-3 fill-current sm:h-3.5 sm:w-3.5" />
             ))}
           </div>
         </div>
@@ -135,7 +135,7 @@ const SectionHeading = ({
 }) => (
   <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div>
-      <h2 className="text-[28px] font-semibold uppercase tracking-[0.06em] text-[#111111]">
+      <h2 className="text-[22px] font-semibold uppercase tracking-[0.06em] text-[#111111] sm:text-[28px]">
         {title}
       </h2>
       {description ? (
@@ -239,11 +239,11 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
   const marqueeBrands = [...BRAND_OPTIONS, ...BRAND_OPTIONS];
 
   return (
-    <div className="home-experience space-y-5 pb-10 sm:space-y-6 sm:pb-12">
-      <section className="home-surface home-hero-shell overflow-hidden rounded-[28px] border border-black/8 bg-white shadow-[0_28px_72px_rgba(17,17,17,0.08)] sm:rounded-[34px]">
-        <div className="home-hero-inner relative overflow-hidden bg-[radial-gradient(circle_at_72%_28%,_rgba(255,106,26,0.12),_transparent_18%),linear-gradient(180deg,_#fffdfb_0%,_#fbf1e8_100%)] px-3 py-3.5 sm:px-8 sm:py-6 lg:px-10 lg:py-8">
-          <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[#ffede2]" />
-          <div className="absolute right-20 top-16 h-64 w-64 rounded-full border border-[#f2ddd0]" />
+    <div className="home-experience space-y-4 pb-8 sm:space-y-6 sm:pb-12">
+      <section className="home-surface home-hero-shell overflow-hidden rounded-[24px] border border-black/8 bg-white shadow-[0_28px_72px_rgba(17,17,17,0.08)] sm:rounded-[34px]">
+        <div className="home-hero-inner relative overflow-hidden bg-[radial-gradient(circle_at_72%_28%,_rgba(255,106,26,0.12),_transparent_18%),linear-gradient(180deg,_#fffdfb_0%,_#fbf1e8_100%)] px-4 py-4 sm:px-8 sm:py-6 lg:px-10 lg:py-8">
+          <div className="home-hero-orb absolute -right-24 top-10 h-80 w-80 rounded-full bg-[#ffede2]" />
+          <div className="home-hero-ring absolute right-20 top-16 h-64 w-64 rounded-full border border-[#f2ddd0]" />
 
           <div className="relative grid gap-5 sm:gap-8 xl:grid-cols-[0.95fr_1.05fr] xl:items-center">
             <div className="space-y-3.5 sm:space-y-5">
@@ -259,7 +259,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
               <div>
                 <h1
                   className={cn(
-                    "max-w-[8.5ch] text-[2.45rem] leading-[0.88] text-[#111111] sm:text-[4.1rem] lg:text-[4.8rem]",
+                    "max-w-[8.8ch] text-[clamp(2.35rem,13vw,3.15rem)] leading-[0.88] text-[#111111] sm:text-[4.1rem] lg:text-[4.8rem]",
                     heroFontClassName
                   )}
                 >
@@ -274,13 +274,13 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
 
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link href="/new-arrivals">
-                  <Button className="group h-11 w-full rounded-[16px] bg-[#111111] px-6 text-sm font-semibold text-white hover:opacity-100 sm:w-auto">
+                  <Button className="group h-11 w-full rounded-[16px] bg-[#111111] px-5 text-[13px] font-semibold text-white hover:opacity-100 sm:w-auto sm:px-6 sm:text-sm">
                     Shop New Arrivals
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 <Link href="/shop">
-                  <Button className="h-11 w-full rounded-[16px] border border-[#111111] bg-white px-6 text-sm font-semibold text-[#111111] hover:bg-[#111111] hover:text-white sm:w-auto">
+                  <Button className="h-11 w-full rounded-[16px] border border-[#111111] bg-white px-5 text-[13px] font-semibold text-[#111111] hover:bg-[#111111] hover:text-white sm:w-auto sm:px-6 sm:text-sm">
                     Explore Collection
                   </Button>
                 </Link>
@@ -291,7 +291,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
                   <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
                     Starting From
                   </p>
-                  <p className="mt-2 break-words text-[2rem] font-semibold leading-none text-[#111111] sm:text-2xl">
+                  <p className="mt-2 break-words text-[clamp(1.35rem,7vw,1.85rem)] font-semibold leading-none text-[#111111] sm:text-2xl">
                     {heroProduct ? Formatter.format(Number(heroProduct.price)) : "$89.99"}
                   </p>
                 </div>
@@ -307,7 +307,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
             </div>
 
             <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-              <div className="relative min-h-[250px] overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_52%_32%,_rgba(255,160,122,0.22),_transparent_34%),linear-gradient(180deg,_#fff9f4_0%,_#f7ede4_100%)] sm:min-h-[360px] sm:rounded-[32px]">
+              <div className="relative min-h-[185px] overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_52%_32%,_rgba(255,160,122,0.22),_transparent_34%),linear-gradient(180deg,_#fff9f4_0%,_#f7ede4_100%)] sm:min-h-[360px] sm:rounded-[32px]">
                 <div className="absolute inset-x-10 top-10 h-[280px] rounded-full bg-[#f3e6db] blur-3xl" />
                 <div className="absolute bottom-0 left-[12%] h-28 w-44 rounded-[36px_36px_0_0] bg-[linear-gradient(180deg,_#5d544f_0%,_#2a2320_100%)] opacity-90 shadow-[0_-10px_30px_rgba(0,0,0,0.16)] [transform:perspective(500px)_rotateX(66deg)_rotateZ(-24deg)]" />
                 {heroProduct ? (
@@ -323,17 +323,17 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
               </div>
 
               <div className="space-y-4">
-                <div className="home-accent-card rounded-[24px] bg-[#ff6a1a] px-4 py-5 text-white shadow-[0_24px_54px_rgba(255,106,26,0.22)] sm:rounded-[28px] sm:px-5 sm:py-6">
+                <div className="home-accent-card rounded-[22px] bg-[#ff6a1a] px-4 py-4 text-white shadow-[0_24px_54px_rgba(255,106,26,0.22)] sm:rounded-[28px] sm:px-5 sm:py-6">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/80">
                     Up to 50% Off
                   </p>
-                  <p className="mt-3 text-[26px] font-semibold leading-none sm:text-[30px]">Fresh sale picks</p>
+                  <p className="mt-3 text-[24px] font-semibold leading-none sm:text-[30px]">Fresh sale picks</p>
                   <p className="mt-3 text-sm leading-6 text-white/80">
                     Stronger focus on the key offer without clutter.
                   </p>
                 </div>
 
-                <div className="rounded-[24px] border border-[#efdcd0] bg-[linear-gradient(180deg,_#fff8f2_0%,_#fff1e5_100%)] p-3.5 sm:rounded-[28px] sm:p-5 shadow-[0_18px_36px_rgba(17,17,17,0.06)]">
+                <div className="rounded-[22px] border border-[#efdcd0] bg-[linear-gradient(180deg,_#fff8f2_0%,_#fff1e5_100%)] p-3 sm:rounded-[28px] sm:p-5 shadow-[0_18px_36px_rgba(17,17,17,0.06)]">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#111111]">
                       Limited Time Only
@@ -343,8 +343,8 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
                   <div className="mt-4 overflow-hidden">
                     <Countdown target={settings.promoSection.countdownTarget} />
                   </div>
-                  <Link className="mt-5 block" href="/sale">
-                    <Button className="h-12 w-full rounded-[18px] bg-[#111111] text-sm font-semibold text-white hover:bg-[#1f1f1f]">
+                  <Link className="mt-4 block sm:mt-5" href="/sale">
+                    <Button className="h-11 w-full rounded-[18px] bg-[#111111] text-sm font-semibold text-white hover:bg-[#1f1f1f] sm:h-12">
                       Shop Sale
                     </Button>
                   </Link>
@@ -355,32 +355,32 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
         </div>
       </section>
 
-      <section className="home-surface home-service-strip grid gap-3 rounded-[24px] border border-black/8 bg-white px-3 py-3 shadow-[0_18px_50px_rgba(17,17,17,0.04)] sm:grid-cols-2 sm:gap-3 sm:px-4 sm:py-4 lg:grid-cols-4 lg:px-6">
+      <section className="home-surface home-service-strip grid grid-cols-2 gap-2 rounded-[22px] border border-black/8 bg-white px-2.5 py-2.5 shadow-[0_18px_50px_rgba(17,17,17,0.04)] sm:grid-cols-2 sm:gap-3 sm:px-4 sm:py-4 lg:grid-cols-4 lg:px-6">
         {serviceItems.map((item) => {
           const Icon = item.icon;
 
           return (
             <div
-              className="home-service-card flex items-center gap-3 rounded-[18px] border border-black/5 bg-[#fcfaf7] p-3"
+              className="home-service-card flex items-center gap-2 rounded-[16px] border border-black/5 bg-[#fcfaf7] p-2.5 sm:gap-3 sm:rounded-[18px] sm:p-3"
               key={item.title}
             >
-              <div className="home-service-icon rounded-2xl bg-[#fff2e8] p-2.5 text-[#111111]">
-                <Icon className="h-4.5 w-4.5" />
+              <div className="home-service-icon rounded-2xl bg-[#fff2e8] p-2 text-[#111111] sm:p-2.5">
+                <Icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
               </div>
               <div>
-                <p className="text-[13px] font-semibold text-[#111111]">{item.title}</p>
-                <p className="text-[13px] text-gray-500">{item.description}</p>
+                <p className="text-[11px] font-semibold text-[#111111] sm:text-[13px]">{item.title}</p>
+                <p className="line-clamp-1 text-[10px] text-gray-500 sm:text-[13px]">{item.description}</p>
               </div>
             </div>
           );
         })}
       </section>
 
-      <section className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_1fr_1fr]">
+      <section className="grid gap-3 sm:gap-4 md:grid-cols-3">
         {categoryCollections.map((collection) => (
           <Link
             className={cn(
-              "home-category-card group relative overflow-hidden rounded-[28px] bg-gradient-to-br p-5 shadow-[0_20px_50px_rgba(17,17,17,0.05)]",
+              "home-category-card group relative overflow-hidden rounded-[24px] bg-gradient-to-br p-4 shadow-[0_20px_50px_rgba(17,17,17,0.05)] sm:rounded-[28px] sm:p-5",
               collection.tone
             )}
             href={collection.href || "/shop"}
@@ -390,7 +390,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
               <p className="home-category-label text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
                 {collection.label}&apos;s
               </p>
-              <h3 className="home-category-title mt-2 text-[26px] font-semibold uppercase leading-none text-[#111111]">
+              <h3 className="home-category-title mt-2 text-[22px] font-semibold uppercase leading-none text-[#111111] sm:text-[26px]">
                 Collection
               </h3>
               <span className="home-category-link mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#111111]">
@@ -399,7 +399,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
               </span>
             </div>
             {collection.product ? (
-              <div className="relative mt-6 h-48">
+              <div className="relative mt-4 h-36 sm:mt-6 sm:h-48">
                 <Image
                   alt={collection.product.name}
                   className="object-contain object-bottom drop-shadow-[0_24px_30px_rgba(17,17,17,0.18)]"
@@ -419,7 +419,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
           href="/new-arrivals"
           title={settings.newArrivalsSection.title}
         />
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {newArrivals.map((product, index) => (
             <ProductTile
               badge={index < 3 ? settings.newArrivalsSection.badgeText || "New" : undefined}
@@ -437,7 +437,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
               <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#ffb17a]">
                 Performance Edit
               </p>
-              <h3 className="mt-4 text-[34px] font-semibold uppercase leading-none">
+              <h3 className="mt-4 text-[28px] font-semibold uppercase leading-none sm:text-[34px]">
                 Run Further.
                 <span className="mt-2 block">Dream Bigger.</span>
               </h3>
@@ -504,7 +504,7 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
           href="/shop"
           title={settings.bestSellerSection.title}
         />
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           {bestSellers.map((product) => (
             <ProductTile
               badge={settings.bestSellerSection.badgeText || "Best Seller"}

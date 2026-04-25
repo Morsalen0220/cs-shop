@@ -33,8 +33,8 @@ const Footer = () => {
 
   return (
     <footer className="border-t border-white/10 bg-[#080d16] text-white">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.8fr_0.9fr]">
+      <div className="mx-auto max-w-7xl px-4 pb-28 pt-8 sm:px-6 sm:pb-10 sm:pt-10 lg:px-8">
+        <div className="grid gap-7 lg:grid-cols-[1.1fr_0.8fr_0.9fr] lg:gap-8">
           <div>
             <Link href="/" className="inline-flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white text-[#111111]">
@@ -47,7 +47,7 @@ const Footer = () => {
                 <p className="text-lg font-semibold text-white">Step ahead</p>
               </div>
             </Link>
-            <p className="mt-5 max-w-md text-sm leading-7 text-white/62">
+            <p className="mt-4 max-w-md text-sm leading-7 text-white/62 sm:mt-5">
               {settings.description}
             </p>
             <div className="mt-5 flex gap-2">
@@ -72,10 +72,10 @@ const Footer = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/45">
               Quick links
             </p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3">
               {settings.links.map((link) => (
                 <Link
-                  className="text-sm font-medium text-white/68 transition hover:text-white"
+                  className="rounded-2xl border border-white/10 px-3 py-3 text-sm font-medium text-white/68 transition hover:text-white sm:border-0 sm:px-0 sm:py-0"
                   href={link.href}
                   key={link.id}
                 >
