@@ -121,13 +121,17 @@ const Footer = () => {
           </p>
           {settings.showCredit ? (
             <p>
-              Built by{" "}
-              <Link
-                href="https://github.com/OgaDavid"
-                className="underline underline-offset-4 hover:text-white"
-              >
-                Oga David
-              </Link>
+              {settings.creditPrefix}{" "}
+              {settings.creditHref ? (
+                <Link
+                  href={settings.creditHref}
+                  className="underline underline-offset-4 hover:text-white"
+                >
+                  {settings.creditText}
+                </Link>
+              ) : (
+                <span>{settings.creditText}</span>
+              )}
             </p>
           ) : null}
         </div>

@@ -24,7 +24,7 @@ interface HomeSettingsFormProps {
 }
 
 const sectionCardClass =
-  "rounded-3xl border border-black/10 bg-white p-6 shadow-sm space-y-5";
+  "rounded-[30px] border border-black/10 bg-white/90 p-6 shadow-[0_18px_50px_rgba(17,17,17,0.045)] space-y-5";
 
 const productSections = [
   {
@@ -862,8 +862,7 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
               Store footer content
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-7 text-gray-500">
-              Control the footer brand copy, copyright text, credit visibility, and
-              customer-facing footer links.
+              Control the footer brand copy, copyright text, credit content, and footer links.
             </p>
           </div>
           <Button className="bg-[#111111]" onClick={addFooterLink}>
@@ -916,6 +915,45 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
           />
           Show built-by credit
         </label>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-[#111111]">Footer credit</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="text-sm font-medium">Credit prefix</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditPrefix", event.target.value)
+                }
+                placeholder="Built by"
+                value={settings.footer.creditPrefix}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Credit text</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditText", event.target.value)
+                }
+                placeholder="Your name"
+                value={settings.footer.creditText}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Credit URL</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditHref", event.target.value)
+                }
+                placeholder="https://example.com"
+                value={settings.footer.creditHref}
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
           <p className="text-sm font-semibold text-[#111111]">Footer links</p>
@@ -1865,16 +1903,17 @@ const HomeSettingsForm: React.FC<HomeSettingsFormProps> = ({ products }) => {
         </div>
       </section>
 
-      <div className="sticky bottom-4 z-20 flex flex-wrap gap-3 rounded-[28px] border border-black/10 bg-white/90 p-3 shadow-[0_18px_40px_rgba(17,17,17,0.08)] backdrop-blur">
-        <Button className="bg-[#111111]" onClick={handleSave}>
+      <div className="sticky bottom-4 z-20 flex flex-wrap items-center gap-3 rounded-[28px] border border-black/10 bg-white/90 p-3 shadow-[0_24px_60px_rgba(17,17,17,0.12)] backdrop-blur">
+        <Button className="rounded-full bg-[#111111] px-5" onClick={handleSave}>
           Save website settings
         </Button>
         <Button
-          className="border border-black/10 bg-white text-[#111111]"
+          className="rounded-full border border-black/10 bg-white px-5 text-[#111111]"
           onClick={handleReset}
         >
           Reset to default
         </Button>
+
         <div className="inline-flex items-center gap-2 rounded-full bg-[#fff3ed] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#ff5a1f]">
           <Sparkles className="h-4 w-4" />
           Homepage controls ready

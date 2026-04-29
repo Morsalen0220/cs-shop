@@ -154,27 +154,27 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
   const timelineMarkers = coordinates.slice(-3).reverse();
 
   return (
-    <div className="mt-8 overflow-hidden rounded-[30px] border border-[#ede5dd] bg-[radial-gradient(circle_at_top_right,_rgba(92,129,255,0.14),_transparent_28%),linear-gradient(180deg,_#ffffff_0%,_#f7f3ee_100%)] p-5 shadow-[0_20px_60px_rgba(17,17,17,0.06)] sm:p-6">
+    <div className="mt-5 overflow-hidden rounded-[24px] border border-[#ede5dd] bg-[radial-gradient(circle_at_top_right,_rgba(92,129,255,0.14),_transparent_28%),linear-gradient(180deg,_#ffffff_0%,_#f7f3ee_100%)] p-4 shadow-[0_20px_60px_rgba(17,17,17,0.06)] sm:mt-8 sm:rounded-[30px] sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#111111] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white sm:text-[11px] sm:tracking-[0.22em]">
             <Clock3 className="h-3.5 w-3.5 text-[#ffb17a]" />
             15 min refresh
           </div>
-          <h3 className="mt-4 text-2xl font-semibold text-[#111111] sm:text-[28px]">
+          <h3 className="mt-3 text-xl font-semibold text-[#111111] sm:mt-4 sm:text-[28px]">
             Revenue momentum
           </h3>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+          <p className="mt-2 max-w-2xl text-xs leading-5 text-gray-500 sm:text-sm sm:leading-6">
             Premium overview combining rolling revenue, unit activity, and
             conversion movement from the latest refresh cycle.
           </p>
         </div>
 
-        <div className="rounded-[22px] border border-black/8 bg-white/90 px-4 py-3 shadow-[0_12px_32px_rgba(17,17,17,0.05)]">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">
+        <div className="w-full rounded-[18px] border border-black/8 bg-white/90 px-3 py-2.5 shadow-[0_12px_32px_rgba(17,17,17,0.05)] sm:w-auto sm:rounded-[22px] sm:px-4 sm:py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400 sm:tracking-[0.22em]">
             Last sync
           </p>
-          <p className="mt-2 text-sm font-semibold text-[#111111]">
+          <p className="mt-1.5 text-sm font-semibold text-[#111111] sm:mt-2">
             {new Date(timestamp).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
@@ -185,8 +185,8 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="overflow-hidden rounded-[28px] border border-black/8 bg-[#0f1117] p-5 text-white shadow-[0_18px_50px_rgba(17,17,17,0.16)]">
+      <div className="mt-4 grid gap-4 sm:mt-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="overflow-hidden rounded-[22px] border border-black/8 bg-[#0f1117] p-4 text-white shadow-[0_18px_50px_rgba(17,17,17,0.16)] sm:rounded-[28px] sm:p-5">
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-[22px] border border-white/10 bg-white/5 p-4">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
@@ -214,7 +214,7 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
             </div>
           </div>
 
-          <div className="mt-5 rounded-[24px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.05)_0%,_rgba(255,255,255,0.02)_100%)] p-4">
+          <div className="mt-4 rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.05)_0%,_rgba(255,255,255,0.02)_100%)] p-3 sm:mt-5 sm:rounded-[24px] sm:p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
@@ -250,8 +250,8 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
               </div>
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-[22px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.02)_0%,_rgba(255,255,255,0.00)_100%)] p-3">
-              <div className="relative h-[280px]">
+            <div className="mt-4 overflow-hidden rounded-[18px] border border-white/8 bg-[linear-gradient(180deg,_rgba(255,255,255,0.02)_0%,_rgba(255,255,255,0.00)_100%)] p-2 sm:mt-5 sm:rounded-[22px] sm:p-3">
+              <div className="relative h-[220px] sm:h-[280px]">
                 <div className="pointer-events-none absolute inset-0 flex flex-col justify-between">
                   {[0, 1, 2, 3, 4].map((line) => (
                     <div key={line} className="border-t border-dashed border-white/10" />
@@ -292,11 +292,13 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
                   ))}
                 </svg>
 
-                <div className="absolute inset-x-0 bottom-0 grid grid-cols-8 gap-2">
+                <div className="absolute inset-x-0 bottom-0 grid grid-cols-8 gap-1 sm:gap-2">
                   {points.map((point) => (
                     <div key={point.label} className="text-center">
-                      <p className="text-[11px] font-semibold text-white/80">{point.label}</p>
-                      <p className="mt-1 text-[10px] text-white/45">
+                      <p className="text-[9px] font-semibold text-white/80 sm:text-[11px]">
+                        {point.label}
+                      </p>
+                      <p className="mt-0.5 text-[8px] text-white/45 sm:mt-1 sm:text-[10px]">
                         {formatCurrency(point.revenue)}
                       </p>
                     </div>
@@ -308,7 +310,7 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
         </div>
 
         <div className="grid gap-4">
-          <div className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_16px_40px_rgba(17,17,17,0.05)]">
+          <div className="rounded-[22px] border border-black/8 bg-white p-4 shadow-[0_16px_40px_rgba(17,17,17,0.05)] sm:rounded-[28px] sm:p-5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-400">
@@ -355,7 +357,7 @@ const SalesChart: React.FC<SalesChartProps> = ({ initialProducts }) => {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_16px_40px_rgba(17,17,17,0.05)]">
+          <div className="rounded-[22px] border border-black/8 bg-white p-4 shadow-[0_16px_40px_rgba(17,17,17,0.05)] sm:rounded-[28px] sm:p-5">
             <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gray-400">
               Activity stream
             </p>

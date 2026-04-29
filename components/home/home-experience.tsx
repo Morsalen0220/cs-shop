@@ -13,7 +13,6 @@ import { HomeSettings, Product } from "@/types";
 import {
   ArrowRight,
   BadgePercent,
-  Clock3,
   Headphones,
   RotateCcw,
   ShieldCheck,
@@ -26,7 +25,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import Countdown from "./countdown";
 
 interface HomeExperienceProps {
   heroFontClassName: string;
@@ -237,117 +235,106 @@ const HomeExperience: React.FC<HomeExperienceProps> = ({
   const accentProduct = heroProducts[1] ?? products[1] ?? heroProduct;
   const heroBrand = heroProduct ? inferBrandFromProduct(heroProduct) : settings.header.brandLabel;
   const marqueeBrands = [...BRAND_OPTIONS, ...BRAND_OPTIONS];
+  const activeProductCount = products.filter((product) => !product.isArchived).length;
 
   return (
     <div className="home-experience space-y-4 pb-8 sm:space-y-6 sm:pb-12">
-      <section className="home-surface home-hero-shell overflow-hidden rounded-[24px] border border-black/8 bg-white shadow-[0_28px_72px_rgba(17,17,17,0.08)] sm:rounded-[34px]">
-        <div className="home-hero-inner relative overflow-hidden bg-[radial-gradient(circle_at_72%_28%,_rgba(255,106,26,0.12),_transparent_18%),linear-gradient(180deg,_#fffdfb_0%,_#fbf1e8_100%)] px-4 py-4 sm:px-8 sm:py-6 lg:px-10 lg:py-8">
-          <div className="home-hero-orb absolute -right-24 top-10 h-80 w-80 rounded-full bg-[#ffede2]" />
-          <div className="home-hero-ring absolute right-20 top-16 h-64 w-64 rounded-full border border-[#f2ddd0]" />
+      <section className="home-surface home-hero-shell overflow-hidden rounded-[26px] border border-black/8 bg-white shadow-[0_28px_80px_rgba(17,17,17,0.08)] sm:rounded-[38px]">
+        <div className="home-hero-inner relative overflow-hidden bg-[radial-gradient(circle_at_82%_18%,_rgba(255,106,26,0.14),_transparent_26%),linear-gradient(135deg,_#fffdf9_0%,_#f8f1ea_52%,_#ffffff_100%)] px-4 py-6 sm:px-8 sm:py-9 lg:px-10 lg:py-12">
+          <div className="home-hero-orb absolute -right-28 top-8 h-80 w-80 rounded-full bg-[#ffeadc]/80 blur-2xl" />
+          <div className="home-hero-ring absolute right-12 top-16 h-72 w-72 rounded-full border border-[#ead8ca]" />
 
-          <div className="relative grid gap-5 sm:gap-8 xl:grid-cols-[0.95fr_1.05fr] xl:items-center">
-            <div className="space-y-3.5 sm:space-y-5">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full border border-[#ff6a1a]/20 bg-[#fff1e8] px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ff6a1a]">
-                  New Arrival
-                </span>
-                <span className="rounded-full bg-white/90 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#111111] shadow-sm">
-                  {heroBrand}
-                </span>
+          <div className="relative grid gap-8 xl:grid-cols-[0.92fr_1.08fr] xl:items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white/80 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#111111] shadow-sm backdrop-blur">
+                <Sparkles className="h-3.5 w-3.5 text-[#ff6a1a]" />
+                {heroBrand} performance edit
               </div>
 
               <div>
                 <h1
                   className={cn(
-                    "max-w-[8.8ch] text-[clamp(2.35rem,13vw,3.15rem)] leading-[0.88] text-[#111111] sm:text-[4.1rem] lg:text-[4.8rem]",
+                    "max-w-[10.5ch] text-[clamp(2.7rem,12vw,4rem)] leading-[0.9] text-[#111111] sm:text-[5rem] lg:text-[6rem]",
                     heroFontClassName
                   )}
                 >
-                  BUILT FOR
-                  <span className="block text-[#ff6a1a]">EVERY STEP</span>
+                  STEP INTO
+                  <span className="block text-[#ff6a1a]">CLEAN SPEED</span>
                 </h1>
-                <p className="mt-2.5 max-w-lg text-[13px] leading-6 text-gray-600 sm:mt-4 sm:text-[15px] sm:leading-7">
-                  A cleaner premium storefront with sharper promotions, calmer spacing,
-                  and faster paths into your catalog.
+                <p className="mt-4 max-w-xl text-sm leading-7 text-gray-600 sm:text-base">
+                  Premium Nike styles curated for everyday comfort, sharper movement, and a
+                  more confident shopping experience.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link href="/new-arrivals">
-                  <Button className="group h-11 w-full rounded-[16px] bg-[#111111] px-5 text-[13px] font-semibold text-white hover:opacity-100 sm:w-auto sm:px-6 sm:text-sm">
-                    Shop New Arrivals
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <Button className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#111111] px-6 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(17,17,17,0.18)] hover:opacity-100 sm:w-auto">
+                    Shop new arrivals
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
                 <Link href="/shop">
-                  <Button className="h-11 w-full rounded-[16px] border border-[#111111] bg-white px-5 text-[13px] font-semibold text-[#111111] hover:bg-[#111111] hover:text-white sm:w-auto sm:px-6 sm:text-sm">
-                    Explore Collection
+                  <Button className="h-12 w-full justify-center rounded-full border border-black/10 bg-white px-6 text-sm font-semibold text-[#111111] hover:border-[#111111] hover:bg-[#111111] hover:text-white sm:w-auto">
+                    Explore collection
                   </Button>
                 </Link>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[20px] border border-black/6 bg-white/78 p-3.5 shadow-[0_16px_30px_rgba(17,17,17,0.04)] sm:rounded-[22px] sm:p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
-                    Starting From
-                  </p>
-                  <p className="mt-2 break-words text-[clamp(1.35rem,7vw,1.85rem)] font-semibold leading-none text-[#111111] sm:text-2xl">
-                    {heroProduct ? Formatter.format(Number(heroProduct.price)) : "$89.99"}
-                  </p>
-                </div>
-                <div className="rounded-[20px] border border-black/6 bg-white/78 p-3.5 shadow-[0_16px_30px_rgba(17,17,17,0.04)] sm:rounded-[22px] sm:p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
-                    Best For
-                  </p>
-                  <p className="mt-2 text-[14px] font-semibold text-[#111111] sm:text-[15px]">
-                    Daily comfort and premium essentials
-                  </p>
-                </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: "Live styles", value: `${activeProductCount}+` },
+                  {
+                    label: "Starting at",
+                    value: heroProduct ? Formatter.format(Number(heroProduct.price)) : "$89.99",
+                  },
+                  { label: "Rating", value: "4.9/5" },
+                ].map((item) => (
+                  <div
+                    className="rounded-[20px] border border-black/8 bg-white/75 p-4 shadow-[0_14px_34px_rgba(17,17,17,0.04)] backdrop-blur"
+                    key={item.label}
+                  >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                      {item.label}
+                    </p>
+                    <p className="mt-2 text-xl font-semibold text-[#111111]">{item.value}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-              <div className="relative min-h-[185px] overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_52%_32%,_rgba(255,160,122,0.22),_transparent_34%),linear-gradient(180deg,_#fff9f4_0%,_#f7ede4_100%)] sm:min-h-[360px] sm:rounded-[32px]">
-                <div className="absolute inset-x-10 top-10 h-[280px] rounded-full bg-[#f3e6db] blur-3xl" />
-                <div className="absolute bottom-0 left-[12%] h-28 w-44 rounded-[36px_36px_0_0] bg-[linear-gradient(180deg,_#5d544f_0%,_#2a2320_100%)] opacity-90 shadow-[0_-10px_30px_rgba(0,0,0,0.16)] [transform:perspective(500px)_rotateX(66deg)_rotateZ(-24deg)]" />
+            <div className="relative">
+              <div className="relative min-h-[340px] overflow-hidden rounded-[28px] border border-black/8 bg-[linear-gradient(180deg,_#fff9f4_0%,_#f1e5da_100%)] shadow-[0_24px_70px_rgba(17,17,17,0.08)] sm:min-h-[480px] sm:rounded-[36px]">
+                <div className="absolute inset-x-12 bottom-8 h-24 rounded-full bg-black/10 blur-2xl" />
+                <div className="absolute left-4 top-4 z-20 rounded-full bg-white/90 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#111111] shadow-sm">
+                  Featured drop
+                </div>
                 {heroProduct ? (
                   <Image
                     alt={heroProduct.name}
-                    className="relative z-10 object-contain p-3 drop-shadow-[0_28px_30px_rgba(0,0,0,0.18)] sm:p-4"
+                    className="relative z-10 object-contain p-6 drop-shadow-[0_34px_34px_rgba(17,17,17,0.2)] sm:p-8"
                     fill
                     priority
-                    sizes="(max-width: 1024px) 90vw, 520px"
+                    sizes="(max-width: 1024px) 90vw, 560px"
                     src={heroProduct.images?.[0]?.url || "/images/nike-reactx.png"}
                   />
                 ) : null}
               </div>
 
-              <div className="space-y-4">
-                <div className="home-accent-card rounded-[22px] bg-[#ff6a1a] px-4 py-4 text-white shadow-[0_24px_54px_rgba(255,106,26,0.22)] sm:rounded-[28px] sm:px-5 sm:py-6">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-white/80">
-                    Up to 50% Off
+              <div className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
+                <div className="rounded-[24px] border border-black/8 bg-white p-4 shadow-[0_18px_40px_rgba(17,17,17,0.06)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
+                    Today&apos;s pick
                   </p>
-                  <p className="mt-3 text-[24px] font-semibold leading-none sm:text-[30px]">Fresh sale picks</p>
-                  <p className="mt-3 text-sm leading-6 text-white/80">
-                    Stronger focus on the key offer without clutter.
+                  <p className="mt-2 line-clamp-1 text-base font-semibold text-[#111111]">
+                    {heroProduct?.name || "Nike performance essential"}
                   </p>
                 </div>
-
-                <div className="rounded-[22px] border border-[#efdcd0] bg-[linear-gradient(180deg,_#fff8f2_0%,_#fff1e5_100%)] p-3 sm:rounded-[28px] sm:p-5 shadow-[0_18px_36px_rgba(17,17,17,0.06)]">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#111111]">
-                      Limited Time Only
-                    </p>
-                    <Clock3 className="h-4 w-4 text-[#ff6a1a]" />
-                  </div>
-                  <div className="mt-4 overflow-hidden">
-                    <Countdown target={settings.promoSection.countdownTarget} />
-                  </div>
-                  <Link className="mt-4 block sm:mt-5" href="/sale">
-                    <Button className="h-11 w-full rounded-[18px] bg-[#111111] text-sm font-semibold text-white hover:bg-[#1f1f1f] sm:h-12">
-                      Shop Sale
-                    </Button>
-                  </Link>
+                <div className="home-accent-card rounded-[24px] bg-[#ff6a1a] p-4 text-white shadow-[0_18px_42px_rgba(255,106,26,0.2)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/80">
+                    Members
+                  </p>
+                  <p className="mt-2 text-lg font-semibold">Extra 10% off</p>
                 </div>
               </div>
             </div>

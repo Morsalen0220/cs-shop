@@ -100,35 +100,73 @@ const AdminNav = () => {
   }, [router]);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[292px] shrink-0 border-r border-white/10 bg-[linear-gradient(180deg,_#111111_0%,_#171717_48%,_#0b0b0b_100%)] p-5 text-white xl:block">
-      <div className="flex h-full flex-col">
-        <Link
-          href="/admin"
-          prefetch
-          className="rounded-[28px] border border-white/10 bg-white/5 p-4"
-        >
-          <div className="flex items-center gap-3">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#111111]">
-              <Store className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/45">
-                Nikeshop
-              </p>
-              <p className="mt-1 text-lg font-semibold text-white">Nikeshop Admin</p>
-            </div>
+    <>
+      <div className="sticky top-0 z-40 border-b border-white/10 bg-[linear-gradient(180deg,_#111111_0%,_#171717_48%,_#0b0b0b_100%)] px-4 py-3 text-white xl:hidden">
+        <div className="flex items-center gap-3">
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#111111]">
+            <Store className="h-4 w-4" />
           </div>
-          <p className="mt-4 text-sm leading-6 text-white/60">
-            Manage your store content and inventory in one place.
-          </p>
-        </Link>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/45">
+              Nikeshop
+            </p>
+            <p className="text-sm font-semibold text-white">Admin Panel</p>
+          </div>
+        </div>
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+          {[...workspaceRoutes, ...commerceRoutes].map((route) => {
+            const active =
+              route.href === "/admin"
+                ? pathname === route.href
+                : pathname.startsWith(route.href);
+            const Icon = route.icon;
 
-        <div className="mt-8 flex-1 space-y-7 overflow-y-auto pr-1">
-          <NavSection pathname={pathname} routes={workspaceRoutes} title="Workspace" />
-          <NavSection pathname={pathname} routes={commerceRoutes} title="Commerce" />
+            return (
+              <Link
+                key={route.href}
+                href={route.href}
+                className={cn(
+                  "inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition",
+                  active
+                    ? "border-white bg-white text-[#111111]"
+                    : "border-white/15 bg-white/5 text-white/80"
+                )}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {route.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
-    </aside>
+
+      <aside className="fixed inset-y-0 left-0 z-40 hidden h-screen w-[292px] shrink-0 border-r border-white/10 bg-[linear-gradient(180deg,_#111111_0%,_#171717_48%,_#0b0b0b_100%)] p-5 text-white xl:block">
+        <div className="flex h-full flex-col">
+          <Link
+            href="/admin"
+            prefetch
+            className="rounded-[28px] border border-white/10 bg-white/5 p-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#111111]">
+                <Store className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/45">
+                  Nikeshop
+                </p>
+                <p className="mt-1 text-lg font-semibold text-white">Nikeshop Admin</p>
+              </div>
+            </div>
+          </Link>
+
+          <div className="mt-8 flex-1 space-y-7 overflow-y-auto pr-1">
+            <NavSection pathname={pathname} routes={workspaceRoutes} title="Workspace" />
+            <NavSection pathname={pathname} routes={commerceRoutes} title="Commerce" />
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
 

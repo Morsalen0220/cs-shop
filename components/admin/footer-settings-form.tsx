@@ -110,7 +110,7 @@ const FooterSettingsForm = () => {
           </h2>
           <p className="mt-2 text-sm leading-7 text-gray-500">
             Control the storefront footer just like the header: brand label,
-            description, copyright text, credit visibility, and link order.
+            description, copyright text, credit content, and link order.
           </p>
         </div>
 
@@ -159,6 +159,45 @@ const FooterSettingsForm = () => {
           />
           Show footer credit line
         </label>
+
+        <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
+          <p className="text-sm font-semibold text-gray-950">Footer credit</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div>
+              <label className="text-sm font-medium">Credit prefix</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditPrefix", event.target.value)
+                }
+                placeholder="Built by"
+                value={settings.creditPrefix}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Credit text</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditText", event.target.value)
+                }
+                placeholder="Your name"
+                value={settings.creditText}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Credit URL</label>
+              <input
+                className="mt-2 h-11 w-full rounded-xl border px-3 text-sm"
+                onChange={(event) =>
+                  updateFooterField("creditHref", event.target.value)
+                }
+                placeholder="https://example.com"
+                value={settings.creditHref}
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="rounded-[26px] border border-black/10 bg-[#faf9f6] p-5">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">

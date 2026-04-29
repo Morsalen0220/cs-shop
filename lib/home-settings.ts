@@ -88,6 +88,9 @@ export const defaultHomeSettings: HomeSettings = {
       "Premium sneakers, curated drops, and a cleaner shopping experience from browse to checkout.",
     copyrightText: "Nike Inc. All Rights Reserved",
     showCredit: false,
+    creditPrefix: "Built by",
+    creditText: "Oga David",
+    creditHref: "https://github.com/OgaDavid",
     links: [
       { id: "footer-about", label: "About", href: "/about", type: "link" },
       { id: "footer-contact", label: "Contact", href: "/contact", type: "link" },

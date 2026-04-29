@@ -86,7 +86,7 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
   }, [searchTerm, tableRows]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <PageHeading
         title={title}
         description={description}
@@ -94,7 +94,7 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
           addHref ? (
             <Link
               href={addHref}
-              className="inline-flex items-center gap-2 rounded-md bg-gray-950 px-4 py-2 text-sm font-semibold text-white"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gray-950 px-4 py-2 text-sm font-semibold text-white sm:w-auto"
             >
               <Plus className="h-4 w-4" />
               Add New
@@ -103,7 +103,7 @@ const AdminListPage: React.FC<AdminListPageProps> = ({
         }
       />
       <input
-        className="h-10 w-full max-w-sm rounded-md border px-3 text-sm outline-none focus:ring-2 focus:ring-gray-300"
+        className="h-10 w-full rounded-md border px-3 text-sm outline-none focus:ring-2 focus:ring-gray-300 sm:max-w-sm"
         placeholder="Search"
         value={searchTerm}
         onChange={(event) => setSearchTerm(event.target.value)}

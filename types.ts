@@ -113,6 +113,9 @@ export interface FooterSettings {
   description: string;
   copyrightText: string;
   showCredit: boolean;
+  creditPrefix: string;
+  creditText: string;
+  creditHref: string;
   links: HeaderMenuItem[];
 }
 

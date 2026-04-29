@@ -729,6 +729,81 @@ body:not(.shop-page) [data-site-navbar] {
   top: 0;
 }
 
+html.dark-theme [data-admin-panel] {
+  background: linear-gradient(180deg, #060913 0%, #0b1220 100%) !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="bg-white"],
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#faf9f6\\]"],
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#f7f7f7\\]"],
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#f6f6f3\\]"] {
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="text-\\[\\#111111\\]"],
+html.dark-theme [data-admin-panel] [class*="text-gray-950"],
+html.dark-theme [data-admin-panel] h1,
+html.dark-theme [data-admin-panel] h2,
+html.dark-theme [data-admin-panel] h3,
+html.dark-theme [data-admin-panel] h4 {
+  color: #f8fafc !important;
+}
+
+html.dark-theme [data-admin-panel] p,
+html.dark-theme [data-admin-panel] span,
+html.dark-theme [data-admin-panel] label,
+html.dark-theme [data-admin-panel] a,
+html.dark-theme [data-admin-panel] [class*="text-gray-500"],
+html.dark-theme [data-admin-panel] [class*="text-gray-600"] {
+  color: #94a3b8 !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="border-black"],
+html.dark-theme [data-admin-panel] [class*="border-gray"] {
+  border-color: rgba(148, 163, 184, 0.16) !important;
+}
+
+html.dark-theme [data-admin-panel] input,
+html.dark-theme [data-admin-panel] textarea,
+html.dark-theme [data-admin-panel] select {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+html.dark-theme [data-admin-panel] button[class*="bg-\\[\\#111111\\]"],
+html.dark-theme [data-admin-panel] a[class*="bg-\\[\\#111111\\]"],
+html.dark-theme [data-admin-panel] button[class*="bg-gray-950"],
+html.dark-theme [data-admin-panel] a[class*="bg-gray-950"] {
+  background: #f8fafc !important;
+  color: #020617 !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="bg-white/90"],
+html.dark-theme [data-admin-panel] [class*="bg-white/80"],
+html.dark-theme [data-admin-panel] [class*="bg-white/70"] {
+  background: rgba(15, 23, 42, 0.9) !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#fff3ed\\]"] {
+  background: rgba(251, 146, 60, 0.16) !important;
+  color: #fdba74 !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="text-\\[\\#ff5a1f\\]"] {
+  color: #fdba74 !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#faf8f5\\]"],
+html.dark-theme [data-admin-panel] [class*="bg-\\[\\#fcfaf7\\]"] {
+  background: linear-gradient(180deg, #172033 0%, #111827 100%) !important;
+}
+
+html.dark-theme [data-admin-panel] [class*="text-emerald-600"] {
+  color: #6ee7b7 !important;
+}
+
 @media (max-width: 640px) {
   body {
     -webkit-text-size-adjust: 100%;
@@ -786,6 +861,18 @@ body:not(.shop-page) [data-site-navbar] {
   footer input,
   footer button {
     min-height: 44px;
+  }
+
+  [data-admin-panel] .sticky.bottom-4 {
+    bottom: 10px;
+    border-radius: 16px;
+    padding: 10px;
+  }
+
+  [data-admin-panel] section[class*="rounded-\\[32px\\]"],
+  [data-admin-panel] section[class*="rounded-\\[34px\\]"],
+  [data-admin-panel] div[class*="rounded-\\[30px\\]"] {
+    border-radius: 20px !important;
   }
 }
 
